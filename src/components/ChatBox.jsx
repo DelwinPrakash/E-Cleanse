@@ -14,6 +14,7 @@ export default function ChatBox(){
     //         console.log(message)
     //     }
     // };
+
     const items = ["Yes", "No", "Maybe", "Sure", "Absolutely", "Definitely", "I don't know", "I'm not sure", "Of course", "Why not?", 
         "Maybe later", "Not yet", "Ask again", "Perhaps", "I think so", "I hope so", "I’ll try", "It’s possible", 
         "Definitely not", "I doubt it", "Probably", "Yes, please", "No thanks", "Sounds good", "I agree", "I disagree", 
