@@ -25,7 +25,7 @@ export default function SignIn(){
 	  console.log('Password:', password);
 	};
 	return (
-	<div className="flex items-center justify-center h-full bg-gray-900">
+	<div className="flex items-center justify-center h-full">
 			<div className="w-full max-w-sm p-8 rounded-lg">
 				<form>
 					<div className="mb-3">
@@ -39,19 +39,8 @@ export default function SignIn(){
 							placeholder="Enter your email"
 						/>
 					</div>
-					{/* <div className="mb-4">
-						<label className="block text-gray-300 text-sm mb-2" htmlFor="password">
-							Password
-						</label>
-						<input
-							type="password"
-							id="password"
-							className="w-full px-4 py-2 text-sm bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white"
-							placeholder="Enter your password"
-						/>
-					</div> */}
 					<div className="mb-4 relative">
-						<label className="block text-gray-400 text-sm mb-2" htmlFor="password">
+						<label className="block text-gray-300 text-sm mb-2" htmlFor="password">
 							Password
 						</label>
 						<input
@@ -101,8 +90,10 @@ export default function SignIn(){
 						</a>
 					</div>
 				</div>
-				<div className="mt-4 flex items-center justify-center">
-					<span className="text-gray-400 text-sm">OR</span>
+				<div className="flex items-center mt-4">
+					<hr className="flex-grow border-gray-600" />
+					<span className="mx-4 text-gray-400 text-sm">OR</span>
+					<hr className="flex-grow border-gray-600" />
 				</div>
 				<button className="mt-4 w-full flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-gray-700 border border-gray-600 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1">
 					<img
