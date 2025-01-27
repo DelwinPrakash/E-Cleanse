@@ -3,13 +3,13 @@ import Message from "./Message";
 
 export default function ChatBox(){
     // const [message, setMessage] = useState([{
-    //     "sender": "ai", "text": "Hello, How can I assist you today?"
-    // }])
-    // const [input, setInput] = useState('');
-
-    // const sendMessage = () => {
-    //     if(input.trim()){
-    //         setMessage([...message, {sender: "user", text: input}]);
+        //     "sender": "ai", "text": "Hello, How can I assist you today?"
+        // }])
+        // const [input, setInput] = useState('');
+        
+        // const sendMessage = () => {
+            //     if(input.trim()){
+                //         setMessage([...message, {sender: "user", text: input}]);
     //         setInput('');
     //         console.log(message)
     //     }

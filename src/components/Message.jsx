@@ -7,8 +7,10 @@ export default function Message({ sender, text }) {
     const isUser = sender === 'user';
 
     useEffect(() => {
-        messageEndRef.current?.scrollIntoView({behaviour: "smooth"})
-    }, [sender])
+        messageEndRef.current?.scrollIntoView({
+            behavior: "smooth"
+        });
+    }, [sender, text]);
 
     return (
         <div className={`bg-red-500 flex ${isUser ? 'justify-end' : 'justify-start'} mb-3`}>
@@ -21,8 +23,8 @@ export default function Message({ sender, text }) {
                         showCursor={false}
                     />
                 )}
-            <div ref={messageEndRef}/>
             </div>
+            <div ref={messageEndRef}/>
         </div>
     );
 }
