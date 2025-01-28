@@ -8,7 +8,7 @@ export default function Auth(){
     const navigate = useNavigate();
     useEffect(() => {
         if(isLoggedIn){
-            return navigate("/");
+            return navigate("/auth");
         }
     },[])
     return(

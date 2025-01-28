@@ -51,9 +51,10 @@ export default function ChatBox(){
     };
 
     return(
-        <div className="bg-gray-700 h-full">
-            <div className="bg-yellow-500 custom-scrollbar flex flex-col h-full max-w-3xl mx-auto py-8 px-3 shadow-2xl shadow-sky-200 rounded-lg">
-                <div className="flex-1 bg-blue-300 p-2 overflow-y-auto mb-4 custom-scrollbar">
+        <div className="h-full">
+            <div className="bg-zinc-900 sm:shadow-2xl sm:shadow-cyan-200 custom-scrollbar flex flex-col h-full max-w-3xl mx-auto py-8 px-3 rounded-lg">
+                {/* shadow-2xl shadow-sky-200 */}
+                <div className="border border-zinc-700 rounded-lg flex-1 p-2 overflow-y-auto mb-4 custom-scrollbar">
                     {message.map((msg, index) => (
                         <Message key={index} sender={msg.sender} text={msg.text} />
                     ))}
@@ -61,7 +62,7 @@ export default function ChatBox(){
                 <div className="flex">
                     <input
                         type="text"
-                        className="flex-1 min-w-0 bg-red-400 p-2 border rounded-l-lg focus:outline-none"
+                        className="bg-zinc-950 text-white flex-1 min-w-0 p-2 border border-sky-700 rounded-l-lg focus:outline-none"
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
