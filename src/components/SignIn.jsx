@@ -1,7 +1,9 @@
 import {React, useState} from "react";
 import google from "../assets/google.png";
+import { useAuth } from "../context/AuthProvider";
 
 export default function SignIn(){
+	const { login } = useAuth();
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [showPassword, setShowPassword] = useState(false);
@@ -14,16 +16,14 @@ export default function SignIn(){
 	  setPassword(event.target.value);
 	};
   
-	const handleShowPassword = () => {
-	  setShowPassword(!showPassword);
-	};
-  
 	const handleSubmit = (event) => {
 	  event.preventDefault();
-	  // Perform login logic here
 	  console.log('Email:', email);
 	  console.log('Password:', password);
+	  login(email, password);
 	};
+
+	console.log(email)
 	return (
 	<div className="flex items-center justify-center h-full">
 			<div className="w-full max-w-sm p-8 rounded-lg">
@@ -37,6 +37,8 @@ export default function SignIn(){
 							id="email"
 							className="w-full px-4 py-2 text-sm bg-gray-800 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white"
 							placeholder="Enter your email"
+							onChange={handleEmailChange}
+							value={email}
 						/>
 					</div>
 					<div className="mb-4 relative">
@@ -48,6 +50,8 @@ export default function SignIn(){
 							id="password"
 							className="w-full px-4 py-2 text-sm bg-gray-800 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white pr-10"
 							placeholder="Enter your password"
+							onChange={handlePasswordChange}
+							value={password}
 						/>
 						<button
 							type="button"
@@ -70,7 +74,8 @@ export default function SignIn(){
 					</div>
 					<button
 						type="submit"
-						className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1">
+						className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+						onClick={handleSubmit}>
 						Log in
 					</button>
 				</form>

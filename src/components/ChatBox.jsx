@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import Message from "./Message";
-import { authRedirect } from "../auth/authRedirect";
 
 export default function ChatBox(){
-    authRedirect();
     // const [message, setMessage] = useState([{
         //     "sender": "ai", "text": "Hello, How can I assist you today?"
         // }])
