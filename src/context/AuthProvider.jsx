@@ -19,12 +19,12 @@ export function AuthProvider({children}){
     // console.log("hi")
     const [user, setUser] = useState(null);
     const login = async (username, password) =>{
-        console.log(username, password)
-        // try{
-        //     const { data } = await axios.post("http://localhost:5173/api/login", {username, password});;
-        // }catch(error){
-        //     console.error("Login failed!", error);
-        // }
+        console.log(username, password, "in authProvider")
+        try{
+            const { data } = await axios.post("http://localhost:3000/api/login", {username, password});;
+        }catch(error){
+            console.error("Login failed!", error);
+        }
     }
 
     return (

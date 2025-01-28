@@ -18,12 +18,9 @@ export default function SignIn(){
   
 	const handleSubmit = (event) => {
 	  event.preventDefault();
-	  console.log('Email:', email);
-	  console.log('Password:', password);
 	  login(email, password);
 	};
 
-	console.log(email)
 	return (
 	<div className="flex items-center justify-center h-full">
 			<div className="w-full max-w-sm p-8 rounded-lg">
