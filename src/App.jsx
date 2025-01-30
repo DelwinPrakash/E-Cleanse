@@ -3,7 +3,8 @@ import { Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthProvider";
 import Nav from "./components/Nav";
 import Home from "./page/Home";
-import Auth from "./page/Auth";
+import SignIn from "./page/SignIn";
+import SignUp from "./page/SignUp";
 import User from "./page/User";
 import Business from "./page/Business";
 import AI from "./page/AI";
@@ -17,7 +18,8 @@ export default function App() {
             <AuthProvider>
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/auth" element={<Auth />} />
+                    <Route path="/signup" element={<SignUp />} />
+                    <Route path="/login" element={<SignIn />} />
                     <Route path="/user" element={<User />} />
                     <Route path="/business" element={<Business />} />
                     <Route path="/ai" element={<AI />} />
