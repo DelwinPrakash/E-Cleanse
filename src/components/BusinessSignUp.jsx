@@ -35,7 +35,7 @@ export default function BusinessSignUp(){
 	};
 
 	return (
-        <div className="w-full max-w-sm p-8 rounded-lg">
+        <div className="w-full max-w-md p-8 rounded-lg">
             <form>
                 <div className="mb-3">
                     <label className="block text-gray-300 text-sm mb-2" htmlFor="username">

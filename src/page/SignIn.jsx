@@ -27,7 +27,7 @@ export default function Auth(){
         <div className="w-full p-2 pb-16 sm:p-2 h-screen bg-zinc-950 z-20">
             <div className="flex flex-col items-center justify-center h-full">
                 <p className="text-white text-xl">Login</p>
-                <div className="w-full max-w-sm p-8 rounded-lg">
+                <div className="w-full max-w-md p-8 rounded-lg">
                     <form>
                         <div className="mb-3">
                             <label className="block text-gray-300 text-sm mb-2" htmlFor="email">
