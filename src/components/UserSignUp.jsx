@@ -15,7 +15,7 @@ export default function UserSignUp(){
 
     const handleChange = (event) => {
         const { name, value } = event.target;
-        console.log(name, value)
+        // console.log(name, value)
         setUserDetails({
             ...userDetails,
             [name]: value
@@ -24,12 +24,17 @@ export default function UserSignUp(){
 
     const handleSubmit = (event) => {
         event.preventDefault();
-	    register(userDetails);
+        register(userDetails);
+        setUserDetails({
+            username: "",
+            email: "",
+            password: ""
+        })
 	};
 
 	return (
-        <div className="w-full max-w-sm p-8 rounded-lg">
-            <form>
+        <div className="w-full max-w-md p-8 rounded-lg">
+            <form className="signUp">
                 <div className="mb-3">
                     <label className="block text-gray-300 text-sm mb-2" htmlFor="username">
                         Full Name
@@ -42,6 +47,7 @@ export default function UserSignUp(){
                         onChange={handleChange}
                         value={userDetails.username}
                         name="username"
+                        required
                     />
                 </div>
                 <div className="mb-3">
@@ -56,6 +62,7 @@ export default function UserSignUp(){
                         onChange={handleChange}
                         value={userDetails.email}
                         name="email"
+                        required
                     />
                 </div>
                 <div className="mb-4 relative">
@@ -70,6 +77,7 @@ export default function UserSignUp(){
                         onChange={handleChange}
                         value={userDetails.password}
                         name="password"
+                        required
                     />
                     <button
                         type="button"

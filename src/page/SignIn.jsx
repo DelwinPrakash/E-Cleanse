@@ -5,22 +5,26 @@ import { useNavigate } from "react-router-dom";
 
 export default function Auth(){
     const { login } = useAuth();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
     
-    const handleEmailChange = (event) => {
-        setEmail(event.target.value);
-    };
+    const [userDetails, setUserDetails] = useState({
+        email: "",
+        password: ""
+    });
     
-    const handlePasswordChange = (event) => {
-        setPassword(event.target.value);
-    };
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        console.log(name, value);
+        setUserDetails({
+            ...userDetails,
+            [name]: value
+        })
+    }
     
     const handleSubmit = (event) => {
         event.preventDefault();
-        login(email, password);
+        login(userDetails);
     };
 
     return(
@@ -38,8 +42,9 @@ export default function Auth(){
                                 id="email"
                                 className="w-full px-4 py-2 text-sm bg-gray-800 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white"
                                 placeholder="Enter your email"
-                                onChange={handleEmailChange}
-                                value={email}
+                                onChange={handleChange}
+                                value={userDetails.email}
+                                name="email"
                             />
                         </div>
                         <div className="mb-4 relative">
@@ -51,8 +56,9 @@ export default function Auth(){
                                 id="password"
                                 className="w-full px-4 py-2 text-sm bg-gray-800 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white pr-10"
                                 placeholder="Enter your password"
-                                onChange={handlePasswordChange}
-                                value={password}
+                                onChange={handleChange}
+                                value={userDetails.password}
+                                name="password"
                             />
                             <button
                                 type="button"
