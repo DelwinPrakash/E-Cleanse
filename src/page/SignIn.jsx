@@ -25,6 +25,10 @@ export default function Auth(){
     const handleSubmit = (event) => {
         event.preventDefault();
         login(userDetails);
+        setUserDetails({
+            email: "",
+            password: ""
+        })
     };
 
     return(
