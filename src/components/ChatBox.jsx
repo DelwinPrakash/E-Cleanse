@@ -49,8 +49,8 @@ export default function ChatBox(){
     };
 
     return(
-        <div className="h-full">
-            <div className="bg-zinc-900 sm:shadow-2xl sm:shadow-cyan-200 custom-scrollbar flex flex-col h-full max-w-3xl mx-auto py-8 px-3 rounded-lg">
+        <div className="h-full pb-14 sm:p-0">
+            <div className="bg-zinc-900 sm:shadow-2xl sm:shadow-cyan-200 custom-scrollbar flex flex-col h-full max-w-3xl mx-auto py-6 px-3 rounded-lg">
                 <div className="border border-zinc-700 rounded-lg flex-1 p-2 overflow-y-auto mb-4 custom-scrollbar">
                     {message.map((msg, index) => (
                         <Message key={index} sender={msg.sender} text={msg.text} />

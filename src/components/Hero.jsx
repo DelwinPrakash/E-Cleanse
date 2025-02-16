@@ -1,10 +1,32 @@
 import { React } from "react";
 import paragraph from "./paragraph";
+import { useNavigate } from "react-router-dom";
 
 export default function Hero(){
+    const navigate = useNavigate();
     return(
         <div className="min-h-screen flex flex-col items-center justify-center">
             <div className="max-w-6xl p-3 rounded-lg shadow-lg">
+                <h1 className="text-3xl font-bold text-green-600 mb-5 text-center">Got Old Gadgets? Let’s Recycle Them! 🌍</h1>
+                {paragraph.map((item, index) => {
+                    return (
+                        <p key={index} className="text-white mb-5">
+                            {item}
+                        </p>
+                    );
+                })}
+                <div className="text-center">
+                    <button
+                        onClick={() => {
+                            alert('Woohoo! Thanks for doing your part. 🎉');
+                            navigate("/login");
+                        }}
+                        className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition duration-300"
+                    >
+                        Recycle My E-Waste Now!
+                    </button>
+                </div>
+                
                 {/* <h1 className="text-4xl font-bold text-green-600 mb-6 text-center">
                     Got Old Gadgets? Let’s Recycle Them! 🌍
                 </h1>
@@ -29,22 +51,6 @@ export default function Hero(){
                     </button>
                 </div> */}
 
-                <h1 className="text-3xl font-bold text-green-600 mb-5 text-center">Got Old Gadgets? Let’s Recycle Them! 🌍</h1>
-                {paragraph.map((item, index) => {
-                    return (
-                        <p key={index} className="text-white mb-5">
-                            {item}
-                        </p>
-                    );
-                })}
-                <div className="text-center">
-                    <button
-                        onClick={() => alert('Woohoo! Thanks for doing your part. 🎉')}
-                        className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition duration-300"
-                    >
-                        Recycle My E-Waste Now!
-                    </button>
-                </div>
             </div>
         </div>
     );
