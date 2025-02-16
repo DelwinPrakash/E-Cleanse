@@ -16,12 +16,12 @@ const handleNewuser = async (req, res) => {
     }
 
     try{
-        const password_hash = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         const result = await User.create({
             auth_method: "email",
             email,
-            password_hash,
+            password_hash: hashedPassword,
             profile: {
                 name: username
             }
