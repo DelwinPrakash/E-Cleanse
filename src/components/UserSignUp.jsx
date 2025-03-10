@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 export default function UserSignUp(){
 	const { register } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
     
     const [userDetails, setUserDetails] = useState({
@@ -21,16 +22,21 @@ export default function UserSignUp(){
             [name]: value
         })
     }
-
-    const handleSubmit = (event) => {
+    
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        register(userDetails);
-        setUserDetails({
-            username: "",
-            email: "",
-            password: ""
-        })
-	};
+        setError(null);
+        try {
+            await register(userDetails);
+            setUserDetails({
+                username: "",
+                email: "",
+                password: "",
+            });
+        } catch (error) {
+            setError(error.message || "An error occurred during login.");
+        }
+    };
 
 	return (
         <div className="w-full max-w-md p-8 rounded-lg">
@@ -98,6 +104,11 @@ export default function UserSignUp(){
                     )}
                     </button>
                 </div>
+                {error && (
+                    <div className="mb-4 text-red-600">
+                    {error}
+                    </div>
+                )}
                 <button
                     type="submit"
                     className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"

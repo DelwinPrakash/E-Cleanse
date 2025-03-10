@@ -20,9 +20,10 @@ export function AuthProvider({children}){
                 }
             }catch(error){
                 console.error("Login failed!", error);
-                if(error.response.status == 401){
-                    alert(error.response.data.message)
-                }
+                // if(error.response.status == 401){
+                //     alert(error.response.data.message)
+                // }
+                throw new Error(error.response?.data?.message || "Login failed. Please try again.");
             }
         }
     }
@@ -31,12 +32,17 @@ export function AuthProvider({children}){
         if(signUpDetails.username && signUpDetails.email && signUpDetails.password){
             console.log("register\n", signUpDetails);
             try{
-                const { data } = await axios.post("http://localhost:3000/api/signup", signUpDetails);
+                const { data, status } = await axios.post("http://localhost:3000/api/signup", signUpDetails);
+                if(status === 201){
+                    alert("Registration success!");
+                    navigate("/login");
+                }
             }catch(error){
                 console.log("Registering failed!", error);
-                if(error.response.status === 409){
-                    alert(error.response.data.message)
-                } 
+                // if(error.response.status === 409){
+                //     alert(error.response.data.message)
+                // } 
+                throw new Error(error.response?.data?.message || "Login failed. Please try again.");
             }
         }
     }

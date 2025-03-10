@@ -10,7 +10,7 @@ const handleLogin = async (req, res) => {
     const { email, password } = req.body;
 
     const foundUser = await User.findOne({email}).exec();
-    if(!foundUser) return res.status(401).json({"message": "Email not found!"});
+    if(!foundUser) return res.status(401).json({"message": "Email not found, sign up instead!"});
 
     const passwordMatch = await bcrypt.compare(password, foundUser.password_hash);
     if(passwordMatch){

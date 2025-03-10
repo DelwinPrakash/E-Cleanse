@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 export default function Auth(){
     const { login } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
     
     const [userDetails, setUserDetails] = useState({
@@ -21,14 +22,19 @@ export default function Auth(){
             [name]: value
         })
     }
-    
-    const handleSubmit = (event) => {
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        login(userDetails);
-        setUserDetails({
-            email: "",
-            password: ""
-        })
+        setError(null);
+        try {
+            await login(userDetails);
+            setUserDetails({
+                email: "",
+                password: "",
+            });
+        } catch (error) {
+            setError(error.message || "An error occurred during login.");
+        }
     };
 
     return(
@@ -83,6 +89,12 @@ export default function Auth(){
                             )}
                             </button>
                         </div>
+                        {/* Display error message if exists */}
+                        {error && (
+                            <div className="mb-4 text-red-600">
+                            {error}
+                            </div>
+                        )}
                         <button
                             type="submit"
                             className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
