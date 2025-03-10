@@ -1,15 +1,20 @@
 import React, { useState } from "react";
+import { useAuth } from "../context/AuthProvider";
 
 export default function Profile(){
     const [showLogout, setShowLogout] = useState(false)
-
-    const user = {
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        profilePicture: 'https://picsum.photos/200/300?random=4',
-        totalRecycled: 15,
-        points: 1200,
-    };
+    const { user, logout } = useAuth();
+    
+    let userDetails = {};
+    if(user){
+        userDetails = {
+            name: user.name,
+            email: user.email,
+            profilePicture: 'https://picsum.photos/200/300?random=4',
+            totalRecycled: 15,
+            points: 1200,
+        };
+    }
     
       // Example recent recycling history
     const recyclingHistory = [
@@ -25,13 +30,13 @@ export default function Profile(){
                     <div className="relative p-6 rounded-lg">
                         <div className="flex items-center space-x-4">
                         <img
-                            src={user.profilePicture}
+                            src={userDetails.profilePicture}
                             alt="Profile"
                             className="w-20 h-20 rounded-full border-2 border-white"
                         />
                         <div>
-                            <h1 className="text-2xl font-bold text-white">{user.name}</h1>
-                            <p className="text-gray-400">{user.email}</p>
+                            <h1 className="text-2xl font-bold text-white">{userDetails.name}</h1>
+                            <p className="text-gray-400">{userDetails.email}</p>
                         </div>
                         </div>
                         <button
@@ -48,7 +53,7 @@ export default function Profile(){
                             <button
                                 className="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-300"
                                 onClick={() => {
-                                    console.log("User logged out");
+                                    logout();
                                 }}
                             >
                             Logout
@@ -61,11 +66,11 @@ export default function Profile(){
                         <div className="grid grid-cols-2 gap-4">
                         <div className="p-4 rounded-lg bg-stone-900">
                             <p className="text-sm text-gray-400">Total Recycled</p>
-                            <p className="text-2xl font-bold text-white">{user.totalRecycled} items</p>
+                            <p className="text-2xl font-bold text-white">{userDetails.totalRecycled} items</p>
                         </div>
                         <div className="p-4 rounded-lg bg-stone-900">
                             <p className="text-sm text-gray-400">Points Earned</p>
-                            <p className="text-2xl font-bold text-white">{user.points} pts</p>
+                            <p className="text-2xl font-bold text-white">{userDetails.points} pts</p>
                         </div>
                         </div>
                     </div>

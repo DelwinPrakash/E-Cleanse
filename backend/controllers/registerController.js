@@ -1,7 +1,8 @@
 import express from "express";
 import bodyParser from "body-parser";
 import bcrypt from "bcrypt"
-import User from "../models/User.js"
+import User from "../models/User.js";
+import jwt from "jsonwebtoken";
 
 const app = express();
 app.use(bodyParser.json());
@@ -26,8 +27,24 @@ const handleNewuser = async (req, res) => {
                 name: username
             }
         });
+
+        const token = jwt.sign({
+            userID: result._id,
+            email: result.email
+        },  process.env.JWT_SECRET, {
+            expiresIn: "1h"
+        });
+
         console.log(result);
-        res.status(201).json({"message": `New user ${username} created successfully`})
+        // res.status(201).json({"message": `New user ${username} created successfully`})
+        res.status(201).json({
+            "message": `New user ${username} created successfully`,
+            token,
+            user:{
+                email: result.email,
+                name: result.profile.name
+            }
+        })
     }catch(error){
         res.status(500).json({"message": error.message})
     }

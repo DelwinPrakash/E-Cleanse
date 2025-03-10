@@ -1,13 +1,28 @@
-import { useState, createContext, useContext } from "react";
+import { useState, createContext, useContext, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
 
 export function AuthProvider({children}){
-    const [isRegistered, setIsRegistered] = useState(false);
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem("authToken");
+        console.log("Token from localStorage: ", token);
+        if(token){
+            axios.get("http://localhost:3000/api/verify", {
+                headers: { Authorization: `Bearer ${token}` }
+            }).then(({data}) => {
+                setUser(data.user);
+            }).catch((error) => {
+                console.error("Token verification failed!!", error);
+                localStorage.removeItem("authToken");
+                setUser(null);
+            })
+        }
+    }, []);
 
     const login = async (loginDetails) => {
         if(loginDetails.email && loginDetails.password){
@@ -15,6 +30,9 @@ export function AuthProvider({children}){
             try{
                 const { data, status } = await axios.post("http://localhost:3000/api/login", loginDetails);
                 if(status === 200){
+                    console.log(data);
+                    localStorage.setItem("authToken", data.token);
+                    setUser(data.user);
                     alert("login success!");
                     navigate("/");                
                 }
@@ -34,6 +52,8 @@ export function AuthProvider({children}){
             try{
                 const { data, status } = await axios.post("http://localhost:3000/api/signup", signUpDetails);
                 if(status === 201){
+                    localStorage.setItem("authToken", data.token);
+                    setUser(data.user);
                     alert("Registration success!");
                     navigate("/login");
                 }
@@ -47,8 +67,15 @@ export function AuthProvider({children}){
         }
     }
 
+    const logout = () => {
+        localStorage.removeItem("authToken");
+        setUser(null);
+        alert("Logged out successfully!");
+        navigate("/login");
+    }
+
     return (
-        <AuthContext.Provider value={{user, isRegistered, login, register}}>
+        <AuthContext.Provider value={{user, login, register, logout}}>
             {children}
         </AuthContext.Provider>
     );

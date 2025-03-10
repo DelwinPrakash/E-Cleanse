@@ -5,6 +5,7 @@ import connectDB from "./backend/config/db.js";
 import mongoose from "mongoose";
 import handleNewuser from "./backend/controllers/registerController.js";
 import handleLogin from "./backend/controllers/authController.js";
+import verifyJWT from "./backend/controllers/verifyJWT.js";
 
 const app = express();
 
@@ -17,6 +18,9 @@ connectDB();
 //     const { email, password } = req.body;
 //     console.log("login", email, password)
 // });
+
+app.get("/api/verify", verifyJWT);
+
 app.post("/api/login", handleLogin);
 
 app.post("/api/signup", handleNewuser)
