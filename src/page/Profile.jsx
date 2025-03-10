@@ -1,55 +1,97 @@
-// import React from "react";
+import React, { useState } from "react";
 
-// export default function Profile(){
-//     return(
-//         <div className="w-full sm:ml-16 p-4">
-//             <h1 className="bg-zinc-900 text-yellow-400 text-2xl p-4">Profile</h1>
-//         </div>
-//     );
-// }
+export default function Profile(){
+    const [showLogout, setShowLogout] = useState(false)
 
-import React, { useState } from 'react';
+    const user = {
+        name: 'John Doe',
+        email: 'john.doe@example.com',
+        profilePicture: 'https://picsum.photos/200/300?random=4',
+        totalRecycled: 15,
+        points: 1200,
+    };
+    
+      // Example recent recycling history
+    const recyclingHistory = [
+        { id: 1, date: '2023-10-01', items: ['Laptop', 'Smartphone'], pointsEarned: 200 },
+        { id: 2, date: '2023-09-25', items: ['Tablet', 'Printer'], pointsEarned: 150 },
+        { id: 3, date: '2023-09-18', items: ['Monitor', 'Keyboard'], pointsEarned: 100 },
+    ];
+    
+    return (
+        <div className="w-full sm:ml-16 p-2 pb-16 sm:p-2">
+            <div className="h-full">
+                <div className="max-w-4xl mx-auto shadow-lg rounded-lg overflow-hidden">
+                    <div className="relative p-6 rounded-lg">
+                        <div className="flex items-center space-x-4">
+                        <img
+                            src={user.profilePicture}
+                            alt="Profile"
+                            className="w-20 h-20 rounded-full border-2 border-white"
+                        />
+                        <div>
+                            <h1 className="text-2xl font-bold text-white">{user.name}</h1>
+                            <p className="text-gray-400">{user.email}</p>
+                        </div>
+                        </div>
+                        <button
+                            onClick={() => setShowLogout(!showLogout)} // Toggle logout button visibility
+                            className="absolute top-1 right-1 p-2 text-gray-400 hover:text-white focus:outline-none"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-person-gear" viewBox="0 0 16 16">
+                                <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1zm3.63-4.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382zM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0" />
+                            </svg>
+                        </button>
 
-const Profile = () => {
-  const [location, setLocation] = useState({ latitude: null, longitude: null });
-  const [error, setError] = useState(null);
+                        {showLogout && (
+                        <div className="absolute top-12 right-6 bg-stone-800 p-2 rounded-lg">
+                            <button
+                                className="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-300"
+                                onClick={() => {
+                                    console.log("User logged out");
+                                }}
+                            >
+                            Logout
+                            </button>
+                        </div>
+                        )}
+                    </div>
 
-  const getLocation = () => {
-    if ("geolocation" in navigator) {
-      // Request location permission
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          // Success callback
-          setLocation({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          });
-          setError(null);
-        },
-        (err) => {
-          // Error callback
-          setError(err.message);
-        }
-      );
-    } else {
-      setError("Geolocation is not supported by your browser.");
-    }
-  };
-  return (
-    <div className="flex flex-col items-center justify-center h-screen gap-4">
-        <h2 className='text-white'>Access Current Location</h2>
-        <button className='bg-blue-500 rounded-lg p-2 text-white' onClick={getLocation}>Get My Location</button>
-        {location.latitude && location.longitude ? (
-            <div className='flex flex-col items-center '>
-                <p className='text-white'>Latitude: {location.latitude}</p>
-                <p className='text-white'>Longitude: {location.longitude}</p>
+                    <div className="mt-4">
+                        <div className="grid grid-cols-2 gap-4">
+                        <div className="p-4 rounded-lg bg-stone-900">
+                            <p className="text-sm text-gray-400">Total Recycled</p>
+                            <p className="text-2xl font-bold text-white">{user.totalRecycled} items</p>
+                        </div>
+                        <div className="p-4 rounded-lg bg-stone-900">
+                            <p className="text-sm text-gray-400">Points Earned</p>
+                            <p className="text-2xl font-bold text-white">{user.points} pts</p>
+                        </div>
+                        </div>
+                    </div>
+
+                    <div className="mt-3">
+                        <h2 className="text-xl font-bold mb-4 text-gray-300">Recent Recycling History</h2>
+                        <div className="space-y-3">
+                        {recyclingHistory.map((entry) => (
+                            <div key={entry.id} className="bg-stone-900 p-4 rounded-lg">
+                            <p className="text-sm text-gray-400">{entry.date}</p>
+                            <p className="text-lg font-semibold text-white">{entry.items.join(', ')}</p>
+                            <p className="text-sm text-green-500">+{entry.pointsEarned} points</p>
+                            </div>
+                        ))}
+                        </div>
+                    </div>
+
+                </div>
             </div>
-        ) : (
-            <p className='text-white'>No location data available.</p>
-        )}
-        {error && <p style={{ color: 'red' }}>Error: {error}</p>}
-    </div>
-  );
-};
+            {/* Logout Button */}
+            {/* <div className="fixed bottom-16 w-full left-0 bg-yellow-500 flex align-center">
+                <button className="max-w-11/12 bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-300">
+                Logout
+                </button>
+            </div> */}
+        </div>
+    );
+}
 
-export default Profile;
