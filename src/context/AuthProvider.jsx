@@ -6,6 +6,7 @@ const AuthContext = createContext();
 
 export function AuthProvider({children}){
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -20,10 +21,14 @@ export function AuthProvider({children}){
                 console.error("Token verification failed!!", error);
                 localStorage.removeItem("authToken");
                 setUser(null);
+            }).finally(() => {
+                setLoading(false);
             })
+        }else{
+            setLoading(false);
         }
     }, []);
-
+    
     const login = async (loginDetails) => {
         if(loginDetails.email && loginDetails.password){
             // console.log(loginDetails)
@@ -55,7 +60,7 @@ export function AuthProvider({children}){
                     localStorage.setItem("authToken", data.token);
                     setUser(data.user);
                     alert("Registration success!");
-                    navigate("/login");
+                    navigate("/");
                 }
             }catch(error){
                 console.log("Registering failed!", error);
@@ -75,7 +80,7 @@ export function AuthProvider({children}){
     }
 
     return (
-        <AuthContext.Provider value={{user, login, register, logout}}>
+        <AuthContext.Provider value={{user, login, register, logout, loading}}>
             {children}
         </AuthContext.Provider>
     );
