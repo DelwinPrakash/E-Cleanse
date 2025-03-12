@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Message from "./Message";
+import { useAuth } from "../context/AuthProvider";
 
 export default function ChatBox(){
     // const [message, setMessage] = useState([{
@@ -14,6 +15,8 @@ export default function ChatBox(){
     //         console.log(message)
     //     }
     // };
+
+    const { user } = useAuth();
 
     const items = ["Yes", "No", "Maybe", "Sure", "Absolutely", "Definitely", "I don't know", "I'm not sure", "Of course", "Why not?", 
         "Maybe later", "Not yet", "Ask again", "Perhaps", "I think so", "I hope so", "I’ll try", "It’s possible", 
@@ -33,7 +36,7 @@ export default function ChatBox(){
 
     const [message, setMessage] = useState([
         { sender: 'user', text: 'Hello, AI!' },
-        { sender: 'ai', text: 'Hello! How can I assist you today?' }
+        { sender: 'ai', text: `Hello ${user.name}! How can I assist you today` }
     ]);
     const [input, setInput] = useState('');
 

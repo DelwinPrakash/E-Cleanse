@@ -29,15 +29,15 @@ export default function Profile(){
                 <div className="max-w-4xl mx-auto shadow-lg rounded-lg overflow-hidden">
                     <div className="relative p-6 rounded-lg">
                         <div className="flex items-center space-x-4">
-                        <img
-                            src={userDetails.profilePicture}
-                            alt="Profile"
-                            className="w-20 h-20 rounded-full border-2 border-white"
-                        />
-                        <div>
-                            <h1 className="text-2xl font-bold text-white">{userDetails.name}</h1>
-                            <p className="text-gray-400">{userDetails.email}</p>
-                        </div>
+                            <img
+                                src={userDetails.profilePicture}
+                                alt="Profile"
+                                className="w-20 h-20 rounded-full border-2 border-white flex-shrink-0"
+                            />
+                            <div>
+                                <h1 className="text-2xl font-bold text-white">{userDetails.name}</h1>
+                                <p className="text-gray-400 break-all">{userDetails.email}</p>
+                            </div>
                         </div>
                         <button
                             onClick={() => setShowLogout(!showLogout)} // Toggle logout button visibility
@@ -49,7 +49,7 @@ export default function Profile(){
                         </button>
 
                         {showLogout && (
-                        <div className="absolute top-12 right-6 bg-stone-800 p-2 rounded-lg">
+                        <div className="absolute top-12 right-3 bg-stone-800 p-2 rounded-lg">
                             <button
                                 className="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-300"
                                 onClick={() => {
