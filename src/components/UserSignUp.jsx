@@ -16,25 +16,28 @@ export default function UserSignUp(){
 
     const handleChange = (event) => {
         const { name, value } = event.target;
-        // console.log(name, value)
         setUserDetails({
             ...userDetails,
             [name]: value
-        })
+        });
     }
     
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setError(null);
-        try {
-            await register(userDetails);
-            setUserDetails({
-                username: "",
-                email: "",
-                password: "",
-            });
-        } catch (error) {
-            setError(error.message || "An error occurred during login.");
+        if(!error && !/\S+@\S+\.\S+/.test(userDetails.email)){
+            setError("Please enter a valid email address!");
+        }else{
+            setError(null);
+            try {
+                await register(userDetails);
+                setUserDetails({
+                    username: "",
+                    email: "",
+                    password: "",
+                });
+            } catch (error) {
+                setError(error.message || "An error occurred during login.");
+            }
         }
     };
 
@@ -61,7 +64,7 @@ export default function UserSignUp(){
                         Email address
                     </label>
                     <input
-                        type="text"
+                        type="email"
                         id="email"
                         className="w-full px-4 py-2 text-sm bg-gray-800 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white"
                         placeholder="Enter your email"

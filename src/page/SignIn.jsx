@@ -25,15 +25,19 @@ export default function Auth(){
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setError(null);
-        try {
-            await login(userDetails);
-            setUserDetails({
-                email: "",
-                password: "",
-            });
-        } catch (error) {
-            setError(error.message || "An error occurred during login.");
+        if(!error && !/\S+@\S+\.\S+/.test(userDetails.email)){
+            setError("Please enter a valid email address!");
+        }else{
+            setError(null);
+            try {
+                await login(userDetails);
+                setUserDetails({
+                    email: "",
+                    password: "",
+                });
+            } catch (error) {
+                setError(error.message || "An error occurred during login.");
+            }
         }
     };
 

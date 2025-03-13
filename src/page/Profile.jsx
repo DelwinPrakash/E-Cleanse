@@ -22,7 +22,6 @@ export default function Profile(){
         };
     }
     
-    
     return (
         <div className="w-full sm:ml-16 p-2 pb-16 sm:p-2">
             <div className="h-full">
