@@ -5,23 +5,23 @@ export default function Profile(){
     const [showLogout, setShowLogout] = useState(false)
     const { user, logout } = useAuth();
     
+    const recyclingHistory = [
+        { id: 1, date: '2023-10-01', items: ['Laptop', 'Smartphone'], pointsEarned: 200 },
+        { id: 2, date: '2023-09-25', items: ['Tablet', 'Printer'], pointsEarned: 150 },
+        { id: 3, date: '2023-09-18', items: ['Monitor', 'Keyboard'], pointsEarned: 100 },
+    ];
+
     let userDetails = {};
     if(user){
         userDetails = {
             name: user.name,
             email: user.email,
             profilePicture: 'https://picsum.photos/200/300?random=4',
-            totalRecycled: 15,
-            points: 1200,
+            totalRecycled: recyclingHistory.length,
+            points: recyclingHistory.reduce((sum, record) => sum+record.pointsEarned, 0),
         };
     }
     
-      // Example recent recycling history
-    const recyclingHistory = [
-        { id: 1, date: '2023-10-01', items: ['Laptop', 'Smartphone'], pointsEarned: 200 },
-        { id: 2, date: '2023-09-25', items: ['Tablet', 'Printer'], pointsEarned: 150 },
-        { id: 3, date: '2023-09-18', items: ['Monitor', 'Keyboard'], pointsEarned: 100 },
-    ];
     
     return (
         <div className="w-full sm:ml-16 p-2 pb-16 sm:p-2">

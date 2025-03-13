@@ -18,7 +18,8 @@ export default function App() {
             <Nav />
             <AuthProvider>
                 <Routes>
-                    <Route path="/" element={<Home />} />
+                    {/* <Route path="/" element={<Home />} /> */}
+                    <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
                     <Route path="/signup" element={<SignUp />} />
                     <Route path="/login" element={<SignIn />} />
                     <Route path="/user" element={<User />} />
