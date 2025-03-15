@@ -6,10 +6,13 @@ import Loading from "./Loading";
 export default function ProtectedRoute({children}){
     const {user, loading} = useAuth();
     const navigate = useNavigate();
-
+    console.log("user from protected route:", user);
     useEffect(() => {
         if(!loading && !user){
             navigate("/login");
+        }else if(!loading && user && !user.verified){
+            console.log("user verified?", user.verified);
+            navigate("/check-email");
         }
     }, [user, navigate, loading])
     
@@ -19,5 +22,5 @@ export default function ProtectedRoute({children}){
         );
     }
     
-    return user ? children : null;
+    return user && user.verified ? children : null;
 }
