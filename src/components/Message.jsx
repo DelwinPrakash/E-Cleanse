@@ -19,7 +19,7 @@ export default function Message({ sender, text }) {
                     <ReactTyped
                         strings={[text]}
                         typeSpeed={17}
-                        className="font-medium leading-relaxed"
+                        className="font-medium leading-relaxed break-normal"
                         showCursor={false}
                     />
                 )}
