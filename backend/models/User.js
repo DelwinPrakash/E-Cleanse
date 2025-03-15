@@ -6,6 +6,17 @@ const user = new Schema({
         type: String,
         enum: ["google", "email"]
     },
+    role: {
+        type: String,
+        enum: ["user", "business"]
+    },
+    verified: {
+        type: Boolean,
+        default: false
+    },
+    verificationToken: {
+        type: String
+    },
     email: {
         type: String,
         required: true

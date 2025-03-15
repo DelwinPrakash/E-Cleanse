@@ -11,6 +11,9 @@ import AI from "./page/AI";
 import Profile from "./page/Profile";
 import NotFound from "./page/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
+import VerifyEmail from "./page/VerifyEmail";
+import CheckEmail from "./page/CheckEmail";
+
 
 export default function App() {
     return (
@@ -28,6 +31,8 @@ export default function App() {
                     <Route path="/ai" element={<ProtectedRoute><AI /></ProtectedRoute>} />
                     {/* <Route path="/profile" element={<Profile />} /> */}
                     <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                    <Route path="/verify-email" element={<VerifyEmail/>} />
+                    <Route path="/check-email" element={<CheckEmail/>} />
                     <Route path="/*" element={<NotFound />} />
                 </Routes>
             </AuthProvider>
