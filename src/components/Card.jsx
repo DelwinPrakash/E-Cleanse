@@ -8,7 +8,7 @@ export default function Card({ order, handleOrderStatus }) {
   };
 
   return (
-    <div className="relative bg-zinc-900 flex justify-center p-2 rounded-lg mb-7"> 
+    <div className="relative flex justify-center rounded-lg"> 
       {/* Card */}
       <div
         className={`bg-gray-800 w-full p-6 rounded-lg shadow-md transition-all duration-300 

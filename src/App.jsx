@@ -5,18 +5,14 @@ import Nav from "./components/Nav";
 import Home from "./page/Home";
 import SignIn from "./page/SignIn";
 import SignUp from "./page/SignUp";
-import User from "./page/User";
-import Business from "./page/Business";
 import AI from "./page/AI";
 import Profile from "./page/Profile";
 import NotFound from "./page/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 import WasteRegistration from "./page/RegisterWaste"; 
-import BusinessProfile from "./page/BusinessProfile.jsx";
 import Verification from "./page/Verification.jsx"; 
 import VerifyEmail from "./page/VerifyEmail";
 import CheckEmail from "./page/CheckEmail";
-// import VerifyBusinessEmail from "./page/VerifyBusinessEmail.jsx";
 import BusinessProfileCompletion from "./page/BusinessProfileCompletion.jsx";
 
 
@@ -31,15 +27,15 @@ export default function App() {
                     <Route path="/signup" element={<SignUp />} />
                     {/* <Route path="/signup/business" element={<SignUp />} /> */}
                     <Route path="/login" element={<SignIn />} />
-                    <Route path="/user" element={<User />} />
+                    {/* <Route path="/user" element={<User />} /> */}
                     <Route path="/register-waste" element={<WasteRegistration />} />
                     <Route path="/register-waste/qrcode" element={<Verification />} />
-                    <Route path="/business" element={<Business />} />
+                    {/* <Route path="/business" element={<Business />} /> */}
                     {/* <Route path="/ai" element={<AI />} /> */}
                     <Route path="/ai" element={<ProtectedRoute><AI /></ProtectedRoute>} />
                     {/* <Route path="/profile" element={<Profile />} /> */}
                     {/* <Route path="/profile/" element={<Profile />} /> */}
-                    <Route path="/business-profile" element={<BusinessProfile />} />
+                    {/* <Route path="/business-profile" element={<BusinessProfile />} /> */}
                     <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                     {/* <Route path="/profile" element={<Profile />} /> */}
                     <Route path="/verify-email" element={<VerifyEmail/>} />
