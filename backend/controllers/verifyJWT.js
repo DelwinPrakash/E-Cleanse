@@ -10,15 +10,18 @@ const verifyJWT = async (req, res) => {
 
     try{
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        // console.log("verifyJWT decode:", decoded);
         const user = await User.findById(decoded.userID).exec();
 
+        console.log("verifyJWT", user);
         if(!user){
             return res.status(401).json({"message": "User not found, Unauthorized!"});
         }
 
-        res.json({user: {
+        res.json({user: { 
             email: user.email,
-            name: user.profile.name
+            name: user.profile.name,
+            verified: user.verified
         }})
     }catch(error){
         res.status(401).json({"message": "Token verification failed, unauthorized!"});

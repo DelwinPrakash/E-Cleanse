@@ -14,6 +14,9 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import WasteRegistration from "./page/RegisterWaste"; 
 import BusinessProfile from "./page/BusinessProfile.jsx";
 import Verification from "./page/verification.jsx"; 
+import VerifyEmail from "./page/VerifyEmail";
+import CheckEmail from "./page/CheckEmail";
+
 
 export default function App() {
     return (
@@ -32,8 +35,11 @@ export default function App() {
                     {/* <Route path="/ai" element={<AI />} /> */}
                     <Route path="/ai" element={<ProtectedRoute><AI /></ProtectedRoute>} />
                     {/* <Route path="/profile" element={<Profile />} /> */}
-                    <Route path="/profile" element={<Profile />} />
+                    {/* <Route path="/profile/" element={<Profile />} /> */}
                     <Route path="/business-profile" element={<BusinessProfile />} />
+                    <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                    <Route path="/verify-email" element={<VerifyEmail/>} />
+                    <Route path="/check-email" element={<CheckEmail/>} />
                     <Route path="/*" element={<NotFound />} />
                 </Routes>
             </AuthProvider>

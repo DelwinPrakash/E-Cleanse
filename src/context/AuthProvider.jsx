@@ -18,7 +18,7 @@ export function AuthProvider({children}){
             }).then(({data}) => {
                 setUser(data.user);
             }).catch((error) => {
-                console.error("Token verification failed!!", error);
+                console.error("Token verification failed!", error);
                 localStorage.removeItem("authToken");
                 setUser(null);
             }).finally(() => {
@@ -57,17 +57,17 @@ export function AuthProvider({children}){
             try{
                 const { data, status } = await axios.post("http://localhost:3000/api/signup", signUpDetails);
                 if(status === 201){
-                    localStorage.setItem("authToken", data.token);
-                    setUser(data.user);
-                    alert("Registration success!");
-                    navigate("/");
+                    // localStorage.setItem("authToken", data.token);
+                    // setUser(data.user);
+                    alert("Registration success!, check your email");
+                    navigate("/check-email");
                 }
             }catch(error){
-                console.log("Registering failed!", error);
+                console.log("Registration failed!", error);
                 // if(error.response.status === 409){
                 //     alert(error.response.data.message)
                 // } 
-                throw new Error(error.response?.data?.message || "Login failed. Please try again.");
+                throw new Error(error.response?.data?.message || "Registration failed. Please try again.");
             }
         }
     }

@@ -31,6 +31,7 @@ const handleLogin = async (req, res) => {
             user: {
                 email: foundUser.email,
                 name: foundUser.profile.name,
+                verified: foundUser.verified
             }
         });
     }else{
