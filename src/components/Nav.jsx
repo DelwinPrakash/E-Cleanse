@@ -10,7 +10,7 @@ export default function Nav() {
 
     return (
         <nav>
-            <div className="navbar fixed bg-zinc-800 text-white flex sm:flex-col justify-around items-center w-full sm:w-16 h-14 sm:h-full bottom-0 sm:bottom-auto sm:left-0">
+            <div className="fixed bg-zinc-800 text-white flex sm:flex-col justify-around items-center w-full sm:w-16 h-14 sm:h-full bottom-0 sm:bottom-auto sm:left-0 z-10">
                 <Link to={"/"} className={`flex flex-col items-center ${loc.pathname === "/" ? "text-white" : "text-gray-500"}`}>
                     <GoHome size={25} />
                     <span className="text-sm sm:text-xs">Home</span>

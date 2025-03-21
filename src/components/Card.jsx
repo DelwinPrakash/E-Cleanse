@@ -8,10 +8,10 @@ export default function Card({ order, handleOrderStatus }) {
   };
 
   return (
-    <div className="relative bg-zinc-950 p-4 rounded-lg mb-7"> 
+    <div className="relative bg-zinc-900 flex justify-center p-2 rounded-lg mb-7"> 
       {/* Card */}
       <div
-        className={`bg-gray-800 p-6 rounded-lg shadow-md transition-all duration-300 
+        className={`bg-gray-800 w-full p-6 rounded-lg shadow-md transition-all duration-300 
         hover:shadow-xl hover:-translate-y-1 relative`}
       >
         <h2 className="text-xl font-bold text-gray-200 mb-4">
@@ -40,19 +40,21 @@ export default function Card({ order, handleOrderStatus }) {
 
         {/* Accept/Reject buttons (only if pending) */}
         {order.status === "Pending" && (
-          <div className="mt-6 flex space-x-4">
-            <button
-              onClick={() => handleOrderStatus(order.id, "Accepted")}
-              className="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-300"
-            >
-              Accept
-            </button>
-            <button
-              onClick={() => handleOrderStatus(order.id, "Rejected")}
-              className="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-300"
-            >
-              Reject
-            </button>
+          <div className="mt-6 border-t border-gray-700">
+            <div className="mt-6 flex space-x-4">
+              <button
+                onClick={() => handleOrderStatus(order.id, "Accepted")}
+                className="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-300"
+              >
+                Accept
+              </button>
+              <button
+                onClick={() => handleOrderStatus(order.id, "Rejected")}
+                className="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-300"
+              >
+                Reject
+              </button>
+            </div>
           </div>
         )}
 
@@ -87,7 +89,7 @@ export default function Card({ order, handleOrderStatus }) {
 
       {/* Modal for Personal Details */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000] px-4">
+        <div className="fixed sm:ml-16 sm:p-2 inset-0 bg-black bg-opacity-70 flex justify-center items-center z-[1000] px-4">
           <div className="bg-gray-800 p-6 rounded-lg shadow-lg max-w-lg w-full relative max-h-[80vh] overflow-y-auto">
             <h3 className="text-xl font-bold text-gray-200 mb-4">Personal Details</h3>
             <div className="space-y-2 text-gray-300">

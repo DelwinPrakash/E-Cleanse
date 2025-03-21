@@ -7,6 +7,7 @@ export default function Auth(){
     const { login } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     
     const [userDetails, setUserDetails] = useState({
@@ -29,6 +30,7 @@ export default function Auth(){
             setError("Please enter a valid email address!");
         }else{
             setError(null);
+            setLoading(true);
             try {
                 await login(userDetails);
                 setUserDetails({
@@ -37,6 +39,8 @@ export default function Auth(){
                 });
             } catch (error) {
                 setError(error.message || "An error occurred during login.");
+            } finally{
+                setLoading(false);
             }
         }
     };
@@ -93,7 +97,6 @@ export default function Auth(){
                             )}
                             </button>
                         </div>
-                        {/* Display error message if exists */}
                         {error && (
                             <div className="mb-4 text-red-600">
                             {error}
@@ -101,9 +104,15 @@ export default function Auth(){
                         )}
                         <button
                             type="submit"
-                            className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
-                            onClick={handleSubmit}>
-                            Log in
+                            // className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+                            className={`w-full px-4 py-2 text-sm font-medium text-white ${loading ? "bg-gray-500 hover:bg-gray-600 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1`}
+                            onClick={handleSubmit}
+                            disabled={loading}>
+                            {loading ? (
+                                <div className="w-5 h-5 border-3 border-b-4 border-white border-solid rounded-full animate-spin mx-auto"></div>
+                            ) : (
+                                "Log in"
+                            )}
                         </button>
                     </form>
                     <div className="flex justify-between mt-3">
@@ -118,7 +127,7 @@ export default function Auth(){
                             <a
                                 href=""
                                 className="text-blue-400 text-sm hover:underline"
-                                onClick={() => {navigate("/signup")}}>
+                                onClick={() => {navigate("/signup/user")}}>
                                 Sign up
                             </a>
                         </div>

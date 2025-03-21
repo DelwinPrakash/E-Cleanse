@@ -1,7 +1,7 @@
 import {React, useState} from "react";
 import { useAuth } from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
-export default function BusinessSignUp(){
+export default function BusinessProfileCompletion(){
 	const { registerBusiness } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState(null);

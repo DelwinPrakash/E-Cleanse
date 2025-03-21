@@ -33,12 +33,12 @@ export default function BusinessProfile() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gray-900 text-white flex flex-col p-6 sm:p-8 sm:ml-16 mb-14 sm:mb-0">
+    <div className="min-h-screen w-full bg-gray-500 text-white flex flex-col p-2 sm:ml-16 mb-14 sm:mb-0">
       {/* Dashboard Title */}
-      <h2 className="text-3xl font-bold text-center mb-6">Business Dashboard</h2>
+      {/* <h2 className="text-3xl font-bold text-center mb-6">Business Profile</h2> */}
 
       {/* Profile Information Section */}
-      <div className="bg-gray-800 p-6 rounded-lg shadow-md mb-8">
+      <div className="bg-gray-800 p-6 rounded-lg shadow-md mb-5">
         <h3 className="text-xl font-semibold mb-4">Business Profile</h3>
         <div className="space-y-4">
           {[
@@ -48,8 +48,8 @@ export default function BusinessProfile() {
             { label: "Contact Number", value: "+1234567890" },
           ].map((item, index) => (
             <div key={index}>
-              <h4 className="font-semibold">{item.label}</h4>
-              <p>{item.value}</p>
+              <h4 className="font-semibold text-gray-400">{item.label}</h4>
+              <p className="text-gray-200">{item.value}</p>
             </div>
           ))}
         </div>
@@ -70,7 +70,7 @@ export default function BusinessProfile() {
       </div>
 
       {/* Recent Orders Table */}
-      <div className="mt-8 bg-gray-800 p-6 rounded-lg shadow-md">
+      <div className="mt-5 bg-gray-800 p-6 rounded-lg shadow-md">
         <h3 className="text-xl font-semibold text-center">Recent Orders</h3>
         <div className="overflow-x-auto">
           <table className="w-full mt-4 text-left">
@@ -79,7 +79,7 @@ export default function BusinessProfile() {
                 <th className="pb-2">User</th>
                 <th className="pb-2">E-Waste Type</th>
                 <th className="pb-2">Status</th>
-                <th className="pb-2">Actions</th> {/* New column for actions */}
+                <th className="pb-2">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -107,7 +107,7 @@ export default function BusinessProfile() {
 
       {/* Modal for Personal Details */}
       {isModalOpen && selectedOrder && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000] px-4">
+        <div className="fixed sm:ml-16 sm:p-2 inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000] px-4">
           <div className="bg-gray-800 p-6 rounded-lg shadow-lg max-w-lg w-full relative max-h-[80vh] overflow-y-auto">
             <h3 className="text-xl font-bold text-gray-200 mb-4">Personal Details</h3>
             <div className="space-y-2 text-gray-300">

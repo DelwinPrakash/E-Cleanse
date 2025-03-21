@@ -108,11 +108,11 @@ export default function Business() {
 
 
   return (
-    <div className="w-full bg-zinc-950 min-h-screen pb-16"> {/* Added padding-bottom to accommodate navbar */}
-      <h1 className="text-3xl font-bold text-white p-4 bg-gray-800 shadow-md rounded-lg mt-0 sm:text-xl sm:pl-20 pl-5">
+    <div className="w-full sm:ml-16 p-2 pb-16 sm:p-2 bg-zinc-950 z-0">
+      <h1 className="text-3xl font-bold text-white p-4 bg-gray-700 shadow-md rounded-lg mt-0 sm:text-xl pl-2">
         Business Dashboard
       </h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 p-4 sm:px-5  sm:pr-5 sm:pl-20">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 py-3">
         {orders.map((order) => (
           <Card key={order.id} order={order} handleOrderStatus={handleOrderStatus} />
         ))}
