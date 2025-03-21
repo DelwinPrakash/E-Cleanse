@@ -11,6 +11,9 @@ import AI from "./page/AI";
 import Profile from "./page/Profile";
 import NotFound from "./page/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
+import WasteRegistration from "./page/RegisterWaste"; 
+import BusinessProfile from "./page/BusinessProfile.jsx";
+import Verification from "./page/verification.jsx"; 
 
 export default function App() {
     return (
@@ -23,11 +26,14 @@ export default function App() {
                     <Route path="/signup" element={<SignUp />} />
                     <Route path="/login" element={<SignIn />} />
                     <Route path="/user" element={<User />} />
+                    <Route path="/Register-waste" element={<WasteRegistration />} />
+                    <Route path="/Register-waste/qrcode" element={<Verification />} />
                     <Route path="/business" element={<Business />} />
                     {/* <Route path="/ai" element={<AI />} /> */}
                     <Route path="/ai" element={<ProtectedRoute><AI /></ProtectedRoute>} />
                     {/* <Route path="/profile" element={<Profile />} /> */}
-                    <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/business-profile" element={<BusinessProfile />} />
                     <Route path="/*" element={<NotFound />} />
                 </Routes>
             </AuthProvider>
