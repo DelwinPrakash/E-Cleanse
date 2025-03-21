@@ -26,7 +26,7 @@ export default function Profile(){
         <div className="w-full sm:ml-16 p-2 pb-16 sm:p-2">
             <div className="h-full">
                 <div className="max-w-4xl mx-auto shadow-lg rounded-lg overflow-hidden">
-                    <div className="relative p-6 rounded-lg">
+                    <div className="relative p-6 rounded-lg bg-stone-900">
                         <div className="flex items-center space-x-4">
                             <img
                                 src={userDetails.profilePicture}
