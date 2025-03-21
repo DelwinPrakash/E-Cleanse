@@ -13,7 +13,7 @@ const handleLogin = async (req, res) => {
     const foundUser = await User.findOne({email}).exec();
     if(!foundUser) return res.status(401).json({"message": "Email not found, sign up instead!"});
 
-    const passwordMatch = await bcrypt.compare(password, foundUser.password_hash);
+    const passwordMatch = bcrypt.compare(password, foundUser.password_hash);
     if(passwordMatch){
 
         const token = jwt.sign({
@@ -23,15 +23,16 @@ const handleLogin = async (req, res) => {
             expiresIn: "1h"
         });
         
-        console.log(`Authenticated ${foundUser.profile.name} successfully`);
+        console.log(`Authenticated ${foundUser.username} successfully`);
         // res.json({"success": `${foundUser.profile.name} is logged in!`});
         res.json({
-            "success": `${foundUser.profile.name} is logged in!`,
+            "success": `${foundUser.username} is logged in!`,
             token,
             user: {
                 email: foundUser.email,
-                name: foundUser.profile.name,
-                verified: foundUser.verified
+                name: foundUser.username,
+                verified: foundUser.verified,
+                role: foundUser.role
             }
         });
     }else{

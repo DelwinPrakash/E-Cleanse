@@ -127,7 +127,7 @@ export default function Auth(){
                             <a
                                 href=""
                                 className="text-blue-400 text-sm hover:underline"
-                                onClick={() => {navigate("/signup/user")}}>
+                                onClick={() => {navigate("/signup")}}>
                                 Sign up
                             </a>
                         </div>

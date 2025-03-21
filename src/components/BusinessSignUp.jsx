@@ -2,25 +2,17 @@ import {React, useState} from "react";
 import { useAuth } from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
 export default function BusinessSignUp(){
-	const { registerBusiness } = useAuth();
+	const { register } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const [businessDetails, setBusinessDetails] = useState({
-        businessName: "",
+        username: "",
         email: "",
         password: "",
-        businessType: "",
-        businessRegNumber: "",
-        gstOrTaxNumber: "",
-        phoneNumber: "",
-        address: "",
-        city: "",
-        state: "",
-        zipCode: "",
-        socialAccount: ""
+        role: "business"
     });
 
 	const handleChange = (event) => {
@@ -39,7 +31,7 @@ export default function BusinessSignUp(){
             setError(null);
             setLoading(true);
             try {
-                await registerBusiness(businessDetails);
+                await register(businessDetails);
             } catch (error) {
                 setError(error.message || "An error occurred during login.");
             } finally{
@@ -61,8 +53,8 @@ export default function BusinessSignUp(){
                         className="w-full px-4 py-2 text-sm bg-gray-800 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white"
                         placeholder="Enter your name"
                         onChange={handleChange}
-                        value={businessDetails.businessName}
-                        name="businessName"
+                        value={businessDetails.username}
+                        name="username"
                         required
                     />
                 </div>
@@ -81,7 +73,7 @@ export default function BusinessSignUp(){
                         required
                     />
                 </div>
-                <div className="mb-3 relative">
+                <div className="mb-4 relative">
                     <label className="block text-gray-300 text-sm mb-2" htmlFor="password">
                         Create new password
                     </label>
@@ -114,7 +106,7 @@ export default function BusinessSignUp(){
                     )}
                     </button>
                 </div>
-                <div className="mb-3">
+                {/* <div className="mb-3">
                     <label className="block text-gray-300 text-sm mb-2" htmlFor="businessType">
                         Type of Business
                     </label>
@@ -250,7 +242,7 @@ export default function BusinessSignUp(){
                         value={businessDetails.socialAccount}
                         name="socialAccount"
                     />
-                </div>
+                </div> */}
                 {error && (
                     <div className="mb-4 text-red-600">
                     {error}

@@ -28,8 +28,8 @@ export default function App() {
                 <Routes>
                     {/* <Route path="/" element={<Home />} /> */}
                     <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-                    <Route path="/signup/user" element={<SignUp />} />
-                    <Route path="/signup/business" element={<SignUp />} />
+                    <Route path="/signup" element={<SignUp />} />
+                    {/* <Route path="/signup/business" element={<SignUp />} /> */}
                     <Route path="/login" element={<SignIn />} />
                     <Route path="/user" element={<User />} />
                     <Route path="/register-waste" element={<WasteRegistration />} />

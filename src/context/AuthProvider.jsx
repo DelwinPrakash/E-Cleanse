@@ -28,7 +28,7 @@ export function AuthProvider({children}){
             setLoading(false);
         }
     }, []);
-    
+    console.log(user, "from authProvider");
     const login = async (loginDetails) => {
         if(loginDetails.email && loginDetails.password){
             // console.log(loginDetails)
@@ -51,11 +51,11 @@ export function AuthProvider({children}){
         }
     }
 
-    const registerUser = async (signUpDetails) => {
-        if(signUpDetails.username && signUpDetails.email && signUpDetails.password){
+    const register = async (signUpDetails) => {
+        if(signUpDetails.email && signUpDetails.password){
             console.log("register\n", signUpDetails);
             try{
-                const { data, status } = await axios.post("http://localhost:3000/api/signup/user", signUpDetails);
+                const { data, status } = await axios.post("http://localhost:3000/api/signup", signUpDetails);
                 if(status === 201){
                     // localStorage.setItem("authToken", data.token);
                     // setUser(data.user);
@@ -72,22 +72,22 @@ export function AuthProvider({children}){
         }
     }
 
-    const registerBusiness = async (businessSignUpDetails) => {
-        console.log("from authProvider", businessSignUpDetails);
-        if(businessSignUpDetails.email && businessSignUpDetails.password){
-            console.log("pass:", businessSignUpDetails.password);
-            try{
-                const { data, status } = await axios.post("http://localhost:3000/api/signup/business", businessSignUpDetails);
-                if(status === 201){
-                    alert("Registration success!, check your email");
-                    navigate("/check-email");
-                }
-            }catch(error){
-                console.log("Registration failed!", error);
-                throw new Error(error.response?.data?.message || "Registration failed. Please try again.");
-            }
-        }
-    }
+    // const registerBusiness = async (businessSignUpDetails) => {
+    //     console.log("from authProvider", businessSignUpDetails);
+    //     if(businessSignUpDetails.email && businessSignUpDetails.password){
+    //         console.log("pass:", businessSignUpDetails.password);
+    //         try{
+    //             const { data, status } = await axios.post("http://localhost:3000/api/signup/business", businessSignUpDetails);
+    //             if(status === 201){
+    //                 alert("Registration success!, check your email");
+    //                 navigate("/check-email");
+    //             }
+    //         }catch(error){
+    //             console.log("Registration failed!", error);
+    //             throw new Error(error.response?.data?.message || "Registration failed. Please try again.");
+    //         }
+    //     }
+    // }
 
     const logout = () => {
         localStorage.removeItem("authToken");
@@ -97,7 +97,7 @@ export function AuthProvider({children}){
     }
 
     return (
-        <AuthContext.Provider value={{user, login, registerUser, registerBusiness, logout, loading}}>
+        <AuthContext.Provider value={{user, login, register, logout, loading}}>
             {children}
         </AuthContext.Provider>
     );

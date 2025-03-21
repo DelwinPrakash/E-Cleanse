@@ -14,19 +14,13 @@ export default function SignIn(){
                     <div className="flex justify-center my-4">
                         <button
                             className={`px-8 py-2 ${isUser ? "bg-blue-500 text-white" : "bg-zinc-600 text-gray-400"} rounded-l-lg`}
-                            onClick={() => {
-                                setIsUser(true);
-                                navigate("/signup/user");
-                            }}
+                            onClick={() => setIsUser(true)}
                         >
                             User
                         </button>
                         <button
                             className={`px-4 py-2 ${!isUser ? "bg-blue-500 text-white" : "bg-zinc-600 text-gray-400"} rounded-r-lg`}
-                            onClick={() => {
-                                setIsUser(false);
-                                navigate("/signup/business");
-                            }}
+                            onClick={() => setIsUser(false)}
                         >
                             Business
                         </button>

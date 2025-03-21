@@ -20,8 +20,9 @@ const verifyJWT = async (req, res) => {
 
         res.json({user: { 
             email: user.email,
-            name: user.profile.name,
-            verified: user.verified
+            name: user.username,
+            verified: user.verified,
+            role: user.role
         }})
     }catch(error){
         res.status(401).json({"message": "Token verification failed, unauthorized!"});

@@ -9,7 +9,7 @@ const app = express();
 app.use(bodyParser.json());
 
 const handleNewuser = async (req, res) => {
-    const { username, email, password } = req.body;
+    const { username, email, password, role } = req.body;
     console.log(username, password, email, "from registerController");
     
     const duplicate = await User.findOne({email}).exec();
@@ -23,13 +23,14 @@ const handleNewuser = async (req, res) => {
         const verificationToken = jwt.sign({ email },  process.env.JWT_SECRET, { expiresIn: "1h" });
 
         const result = await User.create({
-            auth_method: "email",
-            role: "user",
+            // auth_method: "email",
+            username,
             email,
             password_hash: hashedPassword,
-            profile: {
-                name: username
-            },
+            role,
+            // profile: {
+            //     name: username
+            // },
             verified: false,
             verificationToken
         });

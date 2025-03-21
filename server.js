@@ -29,13 +29,13 @@ app.get("/api/verify", verifyJWT);
 
 app.post("/api/login", handleLogin);
 
-app.post("/api/signup/user", handleNewuser)
+app.post("/api/signup", handleNewuser)
 
-app.get("/api/verify-business-email", verifyBusinessEmail);
+// app.get("/api/verify-business-email", verifyBusinessEmail);
 
-app.get("/api/verify-business", verifyBusinessJWT);
+// app.get("/api/verify-business", verifyBusinessJWT);
 
-app.post("/api/signup/business", createBusinessUser);
+// app.post("/api/signup/business", createBusinessUser);
 
 mongoose.connection.once("open", () => {
     console.log("Connected to MongoDB");

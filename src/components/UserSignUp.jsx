@@ -3,7 +3,7 @@ import google from "../assets/google.png";
 import { useAuth } from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
 export default function UserSignUp(){
-	const { registerUser } = useAuth();
+	const { register } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -12,7 +12,8 @@ export default function UserSignUp(){
     const [userDetails, setUserDetails] = useState({
         username: "",
         email: "",
-        password: ""
+        password: "",
+        role: "user"
     });
 
     const handleChange = (event) => {
@@ -31,7 +32,7 @@ export default function UserSignUp(){
             setError(null);
             setLoading(true);
             try {
-                await registerUser(userDetails);
+                await register(userDetails);
                 setUserDetails({
                     username: "",
                     email: "",
