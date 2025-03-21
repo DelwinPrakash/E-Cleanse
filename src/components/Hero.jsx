@@ -19,7 +19,7 @@ export default function Hero(){
                     <button
                         onClick={() => {
                             alert('Woohoo! Thanks for doing your part. 🎉');
-                            navigate("/login");
+                            navigate('./Register-waste');
                         }}
                         className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition duration-300"
                     >
