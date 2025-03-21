@@ -37,7 +37,7 @@ export default function App() {
                     {/* <Route path="/profile" element={<Profile />} /> */}
                     {/* <Route path="/profile/" element={<Profile />} /> */}
                     <Route path="/business-profile" element={<BusinessProfile />} />
-                    <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                    <Route path="/profile" element={<Profile />} />
                     <Route path="/verify-email" element={<VerifyEmail/>} />
                     <Route path="/check-email" element={<CheckEmail/>} />
                     <Route path="/*" element={<NotFound />} />
