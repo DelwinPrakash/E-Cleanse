@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 export default function CheckEmail(){
     const navigate = useNavigate();
     return (
-        <div className="flex items-center justify-center w-full h-screen bg-zinc-950 z-0">
+        <div className="flex items-center justify-center w-full h-screen bg-zinc-950 z-20">
             <div className="max-w-md w-full md:bg-zinc-900 shadow-lg rounded-lg p-8">
                 <h1 className="text-3xl font-bold text-center text-gray-100 mb-4">
                     Verify Your Email

@@ -3,7 +3,7 @@ import google from "../assets/google.png";
 import { useAuth } from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
 export default function UserSignUp(){
-	const { register } = useAuth();
+	const { registerUser } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -31,7 +31,7 @@ export default function UserSignUp(){
             setError(null);
             setLoading(true);
             try {
-                await register(userDetails);
+                await registerUser(userDetails);
                 setUserDetails({
                     username: "",
                     email: "",

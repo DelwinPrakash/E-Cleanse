@@ -16,6 +16,8 @@ import BusinessProfile from "./page/BusinessProfile.jsx";
 import Verification from "./page/Verification.jsx"; 
 import VerifyEmail from "./page/VerifyEmail";
 import CheckEmail from "./page/CheckEmail";
+import VerifyBusinessEmail from "./page/VerifyBusinessEmail.jsx";
+import BusinessProfileCompletion from "./page/BusinessProfileCompletion.jsx";
 
 
 export default function App() {
@@ -26,7 +28,8 @@ export default function App() {
                 <Routes>
                     {/* <Route path="/" element={<Home />} /> */}
                     <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-                    <Route path="/signup" element={<SignUp />} />
+                    <Route path="/signup/user" element={<SignUp />} />
+                    <Route path="/signup/business" element={<SignUp />} />
                     <Route path="/login" element={<SignIn />} />
                     <Route path="/user" element={<User />} />
                     <Route path="/register-waste" element={<WasteRegistration />} />
@@ -37,8 +40,11 @@ export default function App() {
                     {/* <Route path="/profile" element={<Profile />} /> */}
                     {/* <Route path="/profile/" element={<Profile />} /> */}
                     <Route path="/business-profile" element={<BusinessProfile />} />
-                    <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                    {/* <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} /> */}
+                    <Route path="/profile" element={<Profile />} />
                     <Route path="/verify-email" element={<VerifyEmail/>} />
+                    <Route path="/verify-business-email" element={<VerifyBusinessEmail/>} />
+                    <Route path="/complete-business-profile" element={<BusinessProfileCompletion/>} />
                     <Route path="/check-email" element={<CheckEmail/>} />
                     <Route path="/*" element={<NotFound />} />
                 </Routes>

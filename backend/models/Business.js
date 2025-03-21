@@ -2,6 +2,10 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const businessSchema = new Schema({
+    role: {
+        type: String,
+        enum: ["user", "business"]
+    },
     organizationName: {
         type: String,
         required: true,
@@ -52,10 +56,17 @@ const businessSchema = new Schema({
     websiteOrSocialMediaLinks: {
         type: String,
     },
+    verified: {
+        type: Boolean,
+        default: false
+    },
+    verificationToken: {
+        type: String
+    },
     createdAt: {
         type: Date,
         default: Date.now,
     },
 });
 
-module.exports = mongoose.model("Business", businessSchema);
+export default mongoose.model("Business", businessSchema);
