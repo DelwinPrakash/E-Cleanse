@@ -1,23 +1,15 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
-const businessSchema = new Schema({
-    role: {
-        type: String,
-        enum: ["user", "business"]
-    },
-    organizationName: {
-        type: String,
+const businessDetailSchema = new Schema({
+    business:{
+        type: Schema.Types.ObjectId,
+        ref: "User",
         required: true,
     },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    password: {
-        type: String,
-        required: true,
+    profileCompletion: {
+        type: Boolean,
+        default: false,
     },
     typeOfBusiness: {
         type: String,
@@ -56,17 +48,10 @@ const businessSchema = new Schema({
     websiteOrSocialMediaLinks: {
         type: String,
     },
-    verified: {
-        type: Boolean,
-        default: false
-    },
-    verificationToken: {
-        type: String
-    },
     createdAt: {
         type: Date,
         default: Date.now,
     },
 });
 
-export default mongoose.model("Business", businessSchema);
+export default mongoose.model("Business", businessDetailSchema);

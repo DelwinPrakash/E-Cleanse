@@ -6,7 +6,7 @@ import Loading from "./Loading";
 export default function ProtectedRoute({children}){
     const {user, loading} = useAuth();
     const navigate = useNavigate();
-    console.log("user from protected route:", user);
+    // console.log("user from protected route:", user);
     useEffect(() => {
         if(!loading && !user){
             navigate("/login");

@@ -16,7 +16,7 @@ import BusinessProfile from "./page/BusinessProfile.jsx";
 import Verification from "./page/Verification.jsx"; 
 import VerifyEmail from "./page/VerifyEmail";
 import CheckEmail from "./page/CheckEmail";
-import VerifyBusinessEmail from "./page/VerifyBusinessEmail.jsx";
+// import VerifyBusinessEmail from "./page/VerifyBusinessEmail.jsx";
 import BusinessProfileCompletion from "./page/BusinessProfileCompletion.jsx";
 
 
@@ -40,10 +40,10 @@ export default function App() {
                     {/* <Route path="/profile" element={<Profile />} /> */}
                     {/* <Route path="/profile/" element={<Profile />} /> */}
                     <Route path="/business-profile" element={<BusinessProfile />} />
-                    {/* <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} /> */}
-                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                    {/* <Route path="/profile" element={<Profile />} /> */}
                     <Route path="/verify-email" element={<VerifyEmail/>} />
-                    <Route path="/verify-business-email" element={<VerifyBusinessEmail/>} />
+                    {/* <Route path="/verify-business-email" element={<VerifyBusinessEmail/>} /> */}
                     <Route path="/complete-business-profile" element={<BusinessProfileCompletion/>} />
                     <Route path="/check-email" element={<CheckEmail/>} />
                     <Route path="/*" element={<NotFound />} />

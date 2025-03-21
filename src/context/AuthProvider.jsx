@@ -28,7 +28,7 @@ export function AuthProvider({children}){
             setLoading(false);
         }
     }, []);
-    console.log(user, "from authProvider");
+    if(user) console.log(user.role);
     const login = async (loginDetails) => {
         if(loginDetails.email && loginDetails.password){
             // console.log(loginDetails)
