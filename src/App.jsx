@@ -37,6 +37,7 @@ export default function App() {
                     {/* <Route path="/profile/" element={<Profile />} /> */}
                     {/* <Route path="/business-profile" element={<BusinessProfile />} /> */}
                     <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                    <Route path="/qrcode" element={<Verification />} />
                     {/* <Route path="/profile" element={<Profile />} /> */}
                     <Route path="/verify-email" element={<VerifyEmail/>} />
                     {/* <Route path="/verify-business-email" element={<VerifyBusinessEmail/>} /> */}
