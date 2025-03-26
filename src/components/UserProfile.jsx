@@ -13,8 +13,9 @@ export default function UserProfile(){
 
     let userDetails = {};
     if(user){
+        console.log("user::", user);
         userDetails = {
-            name: user.name,
+            name: user.username,
             email: user.email,
             profilePicture: 'https://picsum.photos/200/300?random=4',
             totalRecycled: recyclingHistory.length,

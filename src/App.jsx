@@ -40,6 +40,7 @@ export default function App() {
                     {/* <Route path="/profile" element={<Profile />} /> */}
                     <Route path="/verify-email" element={<VerifyEmail/>} />
                     {/* <Route path="/verify-business-email" element={<VerifyBusinessEmail/>} /> */}
+                    {/* <Route path="/complete-business-profile" element={<ProtectedRoute><BusinessProfileCompletion/></ProtectedRoute>} /> */}
                     <Route path="/complete-business-profile" element={<BusinessProfileCompletion/>} />
                     <Route path="/check-email" element={<CheckEmail/>} />
                     <Route path="/*" element={<NotFound />} />

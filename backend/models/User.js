@@ -10,6 +10,13 @@ const user = new Schema({
         type: String,
         required: true
     },
+    email: {
+        type: String,
+        required: true
+    },
+    password_hash: {
+        type: String,
+    },
     role: {
         type: String,
         enum: ["user", "business"]
@@ -21,12 +28,9 @@ const user = new Schema({
     verificationToken: {
         type: String
     },
-    email: {
-        type: String,
-        required: true
-    },
-    password_hash: {
-        type: String,
+    profileCompletion: {
+        type: Boolean,
+        default: false,
     },
     // google_id: {
     //     type: String

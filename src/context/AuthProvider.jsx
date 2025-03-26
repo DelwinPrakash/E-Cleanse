@@ -28,10 +28,9 @@ export function AuthProvider({children}){
             setLoading(false);
         }
     }, []);
-    if(user) console.log(user.role);
+    if(user) console.log(user);
     const login = async (loginDetails) => {
         if(loginDetails.email && loginDetails.password){
-            // console.log(loginDetails)
             try{
                 const { data, status } = await axios.post("http://localhost:3000/api/login", loginDetails);
                 if(status === 200){
@@ -39,13 +38,14 @@ export function AuthProvider({children}){
                     localStorage.setItem("authToken", data.token);
                     setUser(data.user);
                     alert("login success!");
-                    navigate("/");                
+                    if(data.redirectTo == "/complete-business-profile"){
+                        navigate('/complete-business-profile', { state: { userID: data._id } });
+                    }else{
+                        navigate("/");                
+                    }
                 }
             }catch(error){
                 console.error("Login failed!", error);
-                // if(error.response.status == 401){
-                //     alert(error.response.data.message)
-                // }
                 throw new Error(error.response?.data?.message || "Login failed. Please try again.");
             }
         }
@@ -71,23 +71,6 @@ export function AuthProvider({children}){
             }
         }
     }
-
-    // const registerBusiness = async (businessSignUpDetails) => {
-    //     console.log("from authProvider", businessSignUpDetails);
-    //     if(businessSignUpDetails.email && businessSignUpDetails.password){
-    //         console.log("pass:", businessSignUpDetails.password);
-    //         try{
-    //             const { data, status } = await axios.post("http://localhost:3000/api/signup/business", businessSignUpDetails);
-    //             if(status === 201){
-    //                 alert("Registration success!, check your email");
-    //                 navigate("/check-email");
-    //             }
-    //         }catch(error){
-    //             console.log("Registration failed!", error);
-    //             throw new Error(error.response?.data?.message || "Registration failed. Please try again.");
-    //         }
-    //     }
-    // }
 
     const logout = () => {
         localStorage.removeItem("authToken");

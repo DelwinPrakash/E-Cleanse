@@ -24,17 +24,23 @@ const handleLogin = async (req, res) => {
         });
         
         console.log(`Authenticated ${foundUser.username} successfully`);
-        // res.json({"success": `${foundUser.profile.name} is logged in!`});
-        res.json({
-            "success": `${foundUser.username} is logged in!`,
-            token,
-            user: {
-                email: foundUser.email,
-                name: foundUser.username,
-                verified: foundUser.verified,
-                role: foundUser.role
-            }
-        });
+        
+        if(foundUser.role === "business" && foundUser.profileCompletion === false){
+            res.json({
+                "success": `${foundUser.username} is logged in!`,
+                token,
+                user: foundUser,
+                redirectTo: "/complete-business-profile"
+            });
+        }else{
+            res.json({
+                "success": `${foundUser.username} is logged in!`,
+                token,
+                user: foundUser,
+                redirectTo: "/user"
+            });
+        }
+
     }else{
         console.log("Unauthorized!");
         res.status(401).json({"message": "Incorrect password!"});

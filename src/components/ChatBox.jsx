@@ -36,7 +36,7 @@ export default function ChatBox(){
 
     const [message, setMessage] = useState([
         { sender: 'user', text: 'Hello, AI!' },
-        { sender: 'ai', text: `Hello ${user.name}! How can I assist you today` }
+        { sender: 'ai', text: `Hello ${user.username}! How can I assist you today` }
     ]);
     const [input, setInput] = useState('');
 
