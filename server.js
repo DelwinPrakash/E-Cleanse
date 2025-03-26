@@ -7,6 +7,7 @@ import handleNewuser from "./backend/controllers/registerController.js";
 import handleLogin from "./backend/controllers/authController.js";
 import verifyJWT from "./backend/controllers/verifyJWT.js";
 import verifyEmail from "./backend/controllers/verifyEmail.js";
+import completeBusinessProfile from "./backend/controllers/businessController.js";
 
 const app = express();
 
@@ -27,6 +28,8 @@ app.get("/api/verify", verifyJWT);
 app.post("/api/login", handleLogin);
 
 app.post("/api/signup", handleNewuser)
+
+app.post("/api/complete-business-profile", completeBusinessProfile);
 
 mongoose.connection.once("open", () => {
     console.log("Connected to MongoDB");

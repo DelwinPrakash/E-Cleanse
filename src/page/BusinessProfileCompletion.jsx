@@ -1,14 +1,30 @@
-import { React, useState } from "react";
-import { useAuth } from "../context/AuthProvider";
+import { React, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useAuth } from "../context/AuthProvider";
 
 export default function BusinessProfileCompletion() {
-    const { registerBusiness } = useAuth();
     const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const [loadingIcon, setLoadingIcon] = useState(false);
     const navigate = useNavigate();
+    const { user, loading } = useAuth();
 
-    const [businessDetails, setBusinessDetails] = useState({
+    useEffect(() => {
+        if(!loading && !user){
+            navigate("/login");
+        }
+        
+        if(!loading){
+            if(user && user.role === "user"){
+                navigate("/");
+            }else if(user && user.role === "business" && user.profileCompletion){
+                navigate("/");
+            }
+        }
+
+    }, [user, loading, navigate]);
+
+    const [businessDetail, setBusinessDetails] = useState({
         businessName: "",
         businessType: "",
         businessRegNumber: "",
@@ -24,7 +40,7 @@ export default function BusinessProfileCompletion() {
     const handleChange = (event) => {
         const { name, value } = event.target;
         setBusinessDetails({
-            ...businessDetails,
+            ...businessDetail,
             [name]: value
         });
     };
@@ -32,14 +48,17 @@ export default function BusinessProfileCompletion() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         setError(null);
-        setLoading(true);
+        setLoadingIcon(true);
         try {
-            await registerBusiness(businessDetails);
-            navigate("/business");
+            const { data, status } = await axios.post("http://localhost:3000/api/complete-business-profile", {businessDetail, userID: user._id});
+            if(status === 201){
+                console.log(data);
+                navigate("/");
+            }
         } catch (error) {
-            setError(error.message || "An error occurred during registration.");
+            setError(error.response?.data?.error || error.response?.data?.message || error.message || "An error occurred during registration.");
         } finally {
-            setLoading(false);
+            setLoadingIcon(false);
         }
     };
 
@@ -48,7 +67,7 @@ export default function BusinessProfileCompletion() {
             <div className="max-w-2xl mx-auto p-6  rounded-lg shadow-lg">
                 <h2 className="text-3xl font-bold text-center mb-6 text-white">Business Profile</h2>
                 <form onSubmit={handleSubmit}>
-                    {Object.keys(businessDetails).map((key) => (
+                    {Object.keys(businessDetail).map((key) => (
                         <div className="mb-3" key={key}>
                             <label className="block text-gray-300 text-sm mb-2" htmlFor={key}>
                                 {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
@@ -59,19 +78,19 @@ export default function BusinessProfileCompletion() {
                                 name={key}
                                 className="w-full px-4 py-2 text-sm bg-gray-800 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 text-white"
                                 placeholder={`Enter ${key}`}
-                                value={businessDetails[key]}
+                                value={businessDetail[key]}
                                 onChange={handleChange}
-                                required={key !== "gstOrTaxNumber" && key !== "socialAccount"}
+                                required={key !== "socialAccount"}
                             />
                         </div>
                     ))}
                     {error && <div className="mb-4 text-red-600">{error}</div>}
                     <button
                         type="submit"
-                        className={`w-full px-4 py-2 text-sm font-medium text-white ${loading ? "bg-gray-500 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"} rounded-lg focus:ring-2 focus:ring-blue-500`}
-                        disabled={loading}
+                        className={`w-full px-4 py-2 text-sm font-medium text-white ${loadingIcon ? "bg-gray-500 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"} rounded-lg focus:ring-2 focus:ring-blue-500`}
+                        disabled={loadingIcon}
                     >
-                        {loading ? "Updating..." : "Update Profile"}
+                        {loadingIcon ? "Updating..." : "Update Profile"}
                     </button>
                 </form>
                 <div className="flex justify-end mt-3">

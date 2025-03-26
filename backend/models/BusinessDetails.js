@@ -2,34 +2,34 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const businessDetailSchema = new Schema({
-    business:{
+    userID:{
         type: Schema.Types.ObjectId,
         ref: "User",
         required: true,
     },
-    profileCompletion: {
-        type: Boolean,
-        default: false,
-    },
-    typeOfBusiness: {
+    businessName: {
         type: String,
         required: true,
     },
-    businessRegistrationNumber: {
+    businessType: {
         type: String,
         required: true,
-        unique: true,
     },
-    gstNumber: {
+    businessRegNumber: {
         type: String,
         required: true,
         unique: true,
     },
-    contactNumber: {
+    gstOrTaxNumber: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    phoneNumber: {
         type: String,
         required: true,
     },
-    fullAddress: {
+    address: {
         type: String,
         required: true,
     },
@@ -41,11 +41,11 @@ const businessDetailSchema = new Schema({
         type: String,
         required: true,
     },
-    pinCode: {
+    zipCode: {
         type: String,
         required: true,
     },
-    websiteOrSocialMediaLinks: {
+    socialAccount: {
         type: String,
     },
     createdAt: {

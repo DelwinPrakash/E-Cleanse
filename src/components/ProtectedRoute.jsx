@@ -6,13 +6,24 @@ import Loading from "./Loading";
 export default function ProtectedRoute({children}){
     const {user, loading} = useAuth();
     const navigate = useNavigate();
-    // console.log("user from protected route:", user);
+
     useEffect(() => {
-        if(!loading && !user){
-            navigate("/login");
-        }else if(!loading && user && !user.verified){
-            console.log("user verified?", user.verified);
-            navigate("/check-email");
+
+        if(!loading){
+            if(!user){
+                navigate("/login");
+                return;
+            }
+            if(!user.verified){
+                navigate("/check-email");
+                return;
+            }
+            if(user.role === "business"){
+                if(!user.profileCompletion){
+                    navigate("/complete-business-profile");
+                    return;
+                }
+            }
         }
     }, [user, navigate, loading])
     
@@ -22,5 +33,5 @@ export default function ProtectedRoute({children}){
         );
     }
     
-    return user && user.verified ? children : null;
+    return user && user.verified && (user.role !== "business" || user.profileCompletion) ? children : null;
 }
