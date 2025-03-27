@@ -39,7 +39,7 @@ export function AuthProvider({children}){
                     setUser(data.user);
                     alert("login success!");
                     if(data.redirectTo == "/complete-business-profile"){
-                        navigate('/complete-business-profile', { state: { userID: data._id } });
+                        navigate('/complete-business-profile');
                     }else{
                         navigate("/");                
                     }
@@ -80,7 +80,7 @@ export function AuthProvider({children}){
     }
 
     return (
-        <AuthContext.Provider value={{user, login, register, logout, loading}}>
+        <AuthContext.Provider value={{user, setUser, login, register, logout, loading}}>
             {children}
         </AuthContext.Provider>
     );

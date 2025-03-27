@@ -7,7 +7,7 @@ export default function BusinessProfileCompletion() {
     const [error, setError] = useState(null);
     const [loadingIcon, setLoadingIcon] = useState(false);
     const navigate = useNavigate();
-    const { user, loading } = useAuth();
+    const { user, setUser, loading } = useAuth();
 
     useEffect(() => {
         if(!loading && !user){
@@ -52,7 +52,10 @@ export default function BusinessProfileCompletion() {
         try {
             const { data, status } = await axios.post("http://localhost:3000/api/complete-business-profile", {businessDetail, userID: user._id});
             if(status === 201){
-                console.log(data);
+                setUser(prevUser => ({
+                    ...prevUser,
+                    profileCompletion: true
+                }));
                 navigate("/");
             }
         } catch (error) {
