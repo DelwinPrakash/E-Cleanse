@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Loading from "./Loading";
 
 export default function ProtectedRoute({children}){
-    const {user, loading} = useAuth();
+    const {user, loading, businessLoading} = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -25,9 +25,9 @@ export default function ProtectedRoute({children}){
                 }
             }
         }
-    }, [user, navigate, loading])
+    }, [user, navigate, loading, businessLoading])
     
-    if (loading) {
+    if (loading || (user && user.role === "business" && businessLoading)) {
         return (
             <Loading/>
         );

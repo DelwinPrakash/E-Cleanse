@@ -6,7 +6,9 @@ const AuthContext = createContext();
 
 export function AuthProvider({children}){
     const [user, setUser] = useState(null);
+    const [businessDetail, setBusinessDetail] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [businessLoading, setBusinessLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -17,10 +19,14 @@ export function AuthProvider({children}){
                 headers: { Authorization: `Bearer ${token}` }
             }).then(({data}) => {
                 setUser(data.user);
+                if(data.user.role === "business"){
+                    fetchBusinessDetails(data.user._id);
+                }
             }).catch((error) => {
                 console.error("Token verification failed!", error);
                 localStorage.removeItem("authToken");
                 setUser(null);
+                fetchBusinessDetails(null)
             }).finally(() => {
                 setLoading(false);
             })
@@ -28,7 +34,7 @@ export function AuthProvider({children}){
             setLoading(false);
         }
     }, []);
-    if(user) console.log(user);
+    
     const login = async (loginDetails) => {
         if(loginDetails.email && loginDetails.password){
             try{
@@ -37,6 +43,9 @@ export function AuthProvider({children}){
                     console.log(data);
                     localStorage.setItem("authToken", data.token);
                     setUser(data.user);
+                    if(data.user.role === "business"){
+                        await fetchBusinessDetails(data.user._id);
+                    }
                     alert("login success!");
                     if(data.redirectTo == "/complete-business-profile"){
                         navigate('/complete-business-profile');
@@ -75,12 +84,24 @@ export function AuthProvider({children}){
     const logout = () => {
         localStorage.removeItem("authToken");
         setUser(null);
+        setBusinessDetail(null);
         alert("Logged out successfully!");
         navigate("/login");
     }
 
+    const fetchBusinessDetails = async(userID) => {
+        try{
+            const { data } = await axios.get(`http://localhost:3000/api/business-details/${userID}`);
+            setBusinessDetail(data.businessDetails);
+        }catch(error){
+            console.log(error);
+        }finally{
+            setBusinessLoading(false)
+        }
+    }
+
     return (
-        <AuthContext.Provider value={{user, setUser, login, register, logout, loading}}>
+        <AuthContext.Provider value={{user, setUser, login, register, logout, loading, businessDetail, businessLoading}}>
             {children}
         </AuthContext.Provider>
     );
