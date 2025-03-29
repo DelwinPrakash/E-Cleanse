@@ -9,6 +9,8 @@ export function AuthProvider({children}){
     const [businessDetail, setBusinessDetail] = useState(null);
     const [loading, setLoading] = useState(true);
     const [businessLoading, setBusinessLoading] = useState(true);
+    // const [userDetails, setUserDetails] = useState(null);
+    // const [userLoading, setUserLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -21,12 +23,14 @@ export function AuthProvider({children}){
                 setUser(data.user);
                 if(data.user.role === "business"){
                     fetchBusinessDetails(data.user._id);
+                    // fetchAllUsers();
                 }
             }).catch((error) => {
                 console.error("Token verification failed!", error);
                 localStorage.removeItem("authToken");
                 setUser(null);
-                fetchBusinessDetails(null)
+                setBusinessDetail(null)
+                // setUserDetails(null)
             }).finally(() => {
                 setLoading(false);
             })
@@ -45,6 +49,7 @@ export function AuthProvider({children}){
                     setUser(data.user);
                     if(data.user.role === "business"){
                         await fetchBusinessDetails(data.user._id);
+                        // await fetchAllUsers();
                     }
                     alert("login success!");
                     if(data.redirectTo == "/complete-business-profile"){
@@ -85,6 +90,7 @@ export function AuthProvider({children}){
         localStorage.removeItem("authToken");
         setUser(null);
         setBusinessDetail(null);
+        // setUserDetails(null);
         alert("Logged out successfully!");
         navigate("/login");
     }
@@ -100,7 +106,20 @@ export function AuthProvider({children}){
         }
     }
 
+    // const fetchAllUsers = async () => {
+    //     try{
+    //         const { data } = await axios.get(`http://localhost:3000/api/user-details`);
+    //         setUserDetails(data.userDetails);
+    //     }catch(error){
+    //         console.log(error);
+    //     }finally{
+    //         setUserLoading(false)
+    //     }
+
+    // } 
+
     return (
+        // <AuthContext.Provider value={{user, setUser, login, register, logout, loading, businessDetail, businessLoading, userDetails, userLoading}}>
         <AuthContext.Provider value={{user, setUser, login, register, logout, loading, businessDetail, businessLoading}}>
             {children}
         </AuthContext.Provider>

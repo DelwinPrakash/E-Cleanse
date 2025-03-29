@@ -24,7 +24,7 @@ const completeBusinessProfile = async (req, res) => {
 
         res.status(201).json({
             message: 'Business profile saved successfully',
-            newBusiness
+            newBusiness     //no need, please remove later
         });
     } catch (error) {
         res.status(500).json({ error: 'Failed to save business profile', details: error.message });

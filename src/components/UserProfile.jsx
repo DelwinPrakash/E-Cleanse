@@ -13,7 +13,6 @@ export default function UserProfile(){
 
     let userDetails = {};
     if(user){
-        console.log("user::", user);
         userDetails = {
             name: user.username,
             email: user.email,
