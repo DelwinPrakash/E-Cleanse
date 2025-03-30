@@ -1,4 +1,5 @@
 import BusinessDetails from "../models/BusinessDetails.js";
+import RecycleItem from "../models/RecycleItem.js";
 import User from "../models/User.js";
 import UserDetails from "../models/UserDetails.js";
 
@@ -58,8 +59,9 @@ const getBusinessDetails = async (req, res) => {
 
 const updateUserStatus = async (req, res) => {      //when the business accepts the order
     const userID = req.params.userID;
+    const { status } = req.body;
     try {
-        const updatedUserStatus = await UserDetails.findOneAndUpdate({_id: userID}, {status: "accepted"});
+        const updatedUserStatus = await UserDetails.findOneAndUpdate({_id: userID}, {status});
         if (!updatedUserStatus) {
             return res.status(404).json({ message: "User details not found" });
         }
@@ -69,4 +71,18 @@ const updateUserStatus = async (req, res) => {      //when the business accepts 
     }
 }
 
-export { completeBusinessProfile, getBusinessDetails, updateUserStatus };
+const recycleItem = async (req, res) => {
+    const { userID, businessID, status } = req.body;
+    try {
+        const newRecycleItem = await RecycleItem.create({
+            userID,
+            businessID,
+            status
+        });
+        res.status(201).json({ message: "Recycle item created successfully", newRecycleItem });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to create recycle item", error: error.message });
+    }
+}
+
+export { completeBusinessProfile, getBusinessDetails, updateUserStatus, recycleItem };

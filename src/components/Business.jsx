@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import Card from "./Card"; // Import the Card component
 import axios from "axios";
 import Loading from "./Loading";
+import { useAuth } from "../context/AuthProvider";
 
 export default function Business() {
 
   const [userDetails, setUserDetails] = useState(null);
   const [userLoading, setUserLoading] = useState(true);
-  
+  const { user } = useAuth();
+
   useEffect(() => {
     const fetchAllUsers = async () => {
       try{
@@ -30,12 +32,21 @@ export default function Business() {
 
   // Function to handle order status updates
   const handleOrderStatus = async (id, status) => {
-    if(status === "accepted"){
-      try{
-        const { data, status } = await axios.put(`http://localhost:3000/api/user-details/${id}`);
-      }catch(error){
-        console.log(error || error.response?.data?.message);
-      }
+    try{
+      const { data } = await axios.put(`http://localhost:3000/api/user-details/${id}`, {status});
+    }catch(error){
+      console.log(error || error.response?.data?.message);
+    }
+
+    try{
+      const { data } = await axios.post(`http://localhost:3000/api/recycle-item`, {
+        userID: id,
+        businessID: user._id,
+        status
+      });
+      console.log(data);
+    }catch(error){
+      console.log(error || error.response?.data?.message);
     }
 
     setUserDetails((prevUsers) =>

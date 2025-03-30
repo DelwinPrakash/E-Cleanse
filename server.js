@@ -7,7 +7,7 @@ import handleNewuser from "./backend/controllers/registerController.js";
 import handleLogin from "./backend/controllers/authController.js";
 import verifyJWT from "./backend/controllers/verifyJWT.js";
 import verifyEmail from "./backend/controllers/verifyEmail.js";
-import { completeBusinessProfile, getBusinessDetails, updateUserStatus } from "./backend/controllers/businessController.js";
+import { completeBusinessProfile, getBusinessDetails, recycleItem, updateUserStatus } from "./backend/controllers/businessController.js";
 import { RecycleWaste, getAllUsers } from "./backend/controllers/userController.js";
 
 const app = express();
@@ -39,6 +39,8 @@ app.post("/api/recycle-waste", RecycleWaste);
 app.get("/api/user-details", getAllUsers);
 
 app.put("/api/user-details/:userID", updateUserStatus);
+
+app.post("/api/recycle-item", recycleItem);
 
 mongoose.connection.once("open", () => {
     console.log("Connected to MongoDB");
