@@ -43,13 +43,13 @@ export default function Card({ user, handleOrderStatus }) {
           <div className="mt-6 border-t border-gray-700">
             <div className="mt-6 flex space-x-4">
               <button
-                onClick={() => handleOrderStatus(user._id, "Accepted")}
+                onClick={() => handleOrderStatus(user._id, "accepted")}
                 className="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-300"
               >
                 Accept
               </button>
               <button
-                onClick={() => handleOrderStatus(user._id, "Rejected")}
+                onClick={() => handleOrderStatus(user._id, "rejected")}
                 className="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-300"
               >
                 Reject
@@ -65,7 +65,7 @@ export default function Card({ user, handleOrderStatus }) {
               <span className="font-semibold">Status:</span>{" "}
               <span
                 className={`font-bold ${
-                  user.status === "Accepted"
+                  user.status === "accepted"
                     ? "text-green-400"
                     : "text-red-400"
                 }`}
@@ -75,7 +75,7 @@ export default function Card({ user, handleOrderStatus }) {
             </p>
 
             {/* Button to show personal details (only if accepted) */}
-            {user.status === "Accepted" && (
+            {user.status === "accepted" && (
               <button
                 onClick={toggleModal}
                 className="text-blue-400 hover:text-blue-500 font-semibold"
