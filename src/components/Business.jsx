@@ -29,7 +29,15 @@ export default function Business() {
   }
 
   // Function to handle order status updates
-  const handleOrderStatus = (id, status) => {
+  const handleOrderStatus = async (id, status) => {
+    if(status === "accepted"){
+      try{
+        const { data, status } = await axios.put(`http://localhost:3000/api/user-details/${id}`);
+      }catch(error){
+        console.log(error || error.response?.data?.message);
+      }
+    }
+
     setUserDetails((prevUsers) =>
       prevUsers.map((user) =>
         user._id === id ? { ...user, status } : user
