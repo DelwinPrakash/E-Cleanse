@@ -6,7 +6,7 @@ import { useAuth } from "../context/AuthProvider";
 
 export default function Business() {
 
-  const [userDetails, setUserDetails] = useState(null);
+  const [userDetails, setUserDetails] = useState([]);
   const [userLoading, setUserLoading] = useState(true);
   const { user } = useAuth();
 
@@ -31,16 +31,17 @@ export default function Business() {
   }
 
   // Function to handle order status updates
-  const handleOrderStatus = async (id, status) => {
+  const handleOrderStatus = async (id, userID, status) => {
     try{
       const { data } = await axios.put(`http://localhost:3000/api/user-details/${id}`, {status});
+      console.log(data)
     }catch(error){
       console.log(error || error.response?.data?.message);
     }
 
     try{
       const { data } = await axios.post(`http://localhost:3000/api/recycle-item`, {
-        userID: id,
+        userID: userID,   //from user collection
         businessID: user._id,
         status
       });

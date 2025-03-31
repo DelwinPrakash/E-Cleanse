@@ -116,7 +116,7 @@ const getBusinessProfile = async (req, res) => {
                 $lookup: {
                     from: "userdetails",
                     localField: "userID",
-                    foreignField: "_id",
+                    foreignField: "userID",
                     as: "userDetails"
                 }
             },
@@ -149,11 +149,42 @@ const getBusinessProfile = async (req, res) => {
                     "userDetails.eWasteType": 1,
                     "userDetails.phoneNumber": 1,
                     "userDetails.pickupAddress": 1,
+                    "userDetails._id": 1,
                     "userInfo.email": 1
                 }
             },
+            {
+                $group: {
+                    _id: "$userDetails._id",
+                    userID: { $first: "$userID" },
+                    businessID: { $first: "$businessID" },
+                    status: { $first: "$status" },
+                    fullName: { $first: "$userDetails.fullName" },
+                    phoneNumber: { $first: "$userDetails.phoneNumber" },
+                    pickupAddress: { $first: "$userDetails.pickupAddress" },
+                    eWasteType: { $addToSet: "$userDetails.eWasteType" }, // Collect unique eWasteTypes
+                    email: { $first: "$userInfo.email" }
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    userID: 1,
+                    businessID: 1,
+                    status: 1,
+                    fullName: 1,
+                    phoneNumber: 1,
+                    pickupAddress: 1,
+                    eWasteType: { $reduce: {
+                        input: "$eWasteType",
+                        initialValue: [],
+                        in: { $setUnion: ["$$value", "$$this"] }
+                    }},
+                    email: 1
+                }
+            }
         ]);
-
+        
         if(recycleDetails.length === 0){
             return res.status(404).json({
                 success: false,

@@ -180,8 +180,8 @@ const handleLogout = () => {
             <tbody>
               {businessProfile.map((order, index) => (
                 <tr key={index} className="border-b border-gray-700">
-                  <td className="py-2">{order.userDetails.fullName}</td>
-                  <td className="py-2">{order.userDetails.eWasteType.join(", ")}</td>
+                  <td className="py-2">{order.fullName}</td>
+                  <td className="py-2">{order.eWasteType.join(", ")}</td>
                   <td className={`py-2 ${order.status === "accepted" ? "text-green-400" : "text-red-400"}`}>{order.status}</td>
                   <td className="py-2">
                     {order.status === "accepted" && ( // Only show "View Details" for accepted orders
@@ -228,16 +228,16 @@ const handleLogout = () => {
             <h3 className="text-xl font-bold text-gray-200 mb-4">Personal Details</h3>
             <div className="space-y-2 text-gray-100">
               <p>
-                <span className="font-semibold text-gray-400">User:</span> {selectedOrder.userDetails.fullName}
+                <span className="font-semibold text-gray-400">User:</span> {selectedOrder.fullName}
               </p>
               <p>
-                <span className="font-semibold text-gray-400">Email:</span> {selectedOrder.userInfo.email}
+                <span className="font-semibold text-gray-400">Email:</span> {selectedOrder.email}
               </p>
               <p>
-                <span className="font-semibold text-gray-400">Phone:</span> {selectedOrder.userDetails.phoneNumber}
+                <span className="font-semibold text-gray-400">Phone:</span> {selectedOrder.phoneNumber}
               </p>
               <p>
-                <span className="font-semibold text-gray-400">Full Address:</span> {selectedOrder.userDetails.pickupAddress}
+                <span className="font-semibold text-gray-400">Full Address:</span> {selectedOrder.pickupAddress}
               </p>
             </div>
             <div className="mt-4 text-right">
