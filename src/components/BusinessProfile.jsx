@@ -1,42 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 // import QrScanner from "react-qr-scanner"; // Import react-qr-scanner
 import { FaQrcode, FaSignOutAlt } from "react-icons/fa"; // Import QR code and logout icons from react-icons
 import { useAuth } from "../context/AuthProvider";
+import Loading from "./Loading";
+import axios from "axios";
 
 export default function BusinessProfile() {
-    const { user, businessDetail, logout } = useAuth();
+  const { user, businessDetail, logout } = useAuth();
 
-    const [isModalOpen, setIsModalOpen] = useState(false); // Track modal visibility
-    const [selectedOrder, setSealectedOrder] = useState(null); // Track selected order for personal details
-    const [isScannerOpen, setIsScannerOpen] = useState(false); // Track QR Scanner modal visibility
-    const [scannedData, setScannedData] = useState(""); // Store scanned QR data
-    const [selectedHistory, setSelectedHistory] = useState(null); // Track selected recycling history for details
-    const navigate = useNavigate(); // Hook for navigation
+  const [isModalOpen, setIsModalOpen] = useState(false); // Track modal visibility
+  const [selectedOrder, setSelectedOrder] = useState(null); // Track selected order for personal details
+  const [isScannerOpen, setIsScannerOpen] = useState(false); // Track QR Scanner modal visibility
+  const [scannedData, setScannedData] = useState(""); // Store scanned QR data
+  const [selectedHistory, setSelectedHistory] = useState(null); // Track selected recycling history for details
+  const [businessProfile, setBusinessProfile] = useState([]);
+  const [userLoading, setUserLoading] = useState(true);
+  const navigate = useNavigate(); // Hook for navigation
 
-  // Sample orders data
-  const orders = [
-    {
-      user: "John Doe",
-      type: "Mobile Phones",
-      status: "Accepted",
-      color: "text-green-400",
-      email: "john.doe@example.com",
-      phone: "+1234567890",
-      address: "123 Recycling Lane, Green City, Eco State, 987654",
-    },
-    {
-      user: "Jane Smith",
-      type: "Batteries",
-      status: "Rejected",
-      color: "text-red-400",
-      email: "jane.smith@example.com",
-      phone: "+0987654321",
-      address: "456 Green Avenue, Eco City, Green State, 123456",
-    },
-  ];
-  // console.log("bP: ", businessDetail)
-  // Sample recycling history data
+  useEffect(() => {
+    const fetchBusinessProfile = async () => {
+      try{
+        const { data } = await axios.get(`http://localhost:3000/api/business-profile/${user._id}`);
+        if(data.success){
+          setBusinessProfile(data.recycleDetails);
+        }
+      }catch(error){
+        console.log(error);
+      }finally{
+        setUserLoading(false)
+      }
+    }
+    fetchBusinessProfile();
+  }, []);
+  
+  if (userLoading){
+    return (
+      <Loading/>
+    );
+  }
+  
   const recyclingHistory = [
     {
         id: 1,
@@ -168,20 +171,20 @@ const handleLogout = () => {
           <table className="w-full mt-4 text-left">
             <thead>
               <tr className="border-b border-gray-700">
-                <th className="pb-2">User</th>
-                <th className="pb-2">E-Waste Type</th>
-                <th className="pb-2">Status</th>
-                <th className="pb-2">Actions</th>
+                <th className="pb-2 text-gray-300">User</th>
+                <th className="pb-2 text-gray-300">E-Waste Type</th>
+                <th className="pb-2 text-gray-300">Status</th>
+                <th className="pb-2 text-gray-300">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {orders.map((order, index) => (
+              {businessProfile.map((order, index) => (
                 <tr key={index} className="border-b border-gray-700">
-                  <td className="py-2">{order.user}</td>
-                  <td className="py-2">{order.type}</td>
-                  <td className={`py-2 ${order.color}`}>{order.status}</td>
+                  <td className="py-2">{order.userDetails.fullName}</td>
+                  <td className="py-2">{order.userDetails.eWasteType.join(", ")}</td>
+                  <td className={`py-2 ${order.status === "accepted" ? "text-green-400" : "text-red-400"}`}>{order.status}</td>
                   <td className="py-2">
-                    {order.status === "Accepted" && ( // Only show "View Details" for accepted orders
+                    {order.status === "accepted" && ( // Only show "View Details" for accepted orders
                       <button
                         onClick={() => toggleModal(order)}
                         className="text-blue-400 hover:text-blue-500 font-semibold"
@@ -223,18 +226,18 @@ const handleLogout = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000] px-4">
           <div className="bg-gray-800 p-6 rounded-lg shadow-lg max-w-lg w-full relative max-h-[80vh] overflow-y-auto">
             <h3 className="text-xl font-bold text-gray-200 mb-4">Personal Details</h3>
-            <div className="space-y-2 text-gray-300">
+            <div className="space-y-2 text-gray-100">
               <p>
-                <span className="font-semibold">User:</span> {selectedOrder.user}
+                <span className="font-semibold text-gray-400">User:</span> {selectedOrder.userDetails.fullName}
               </p>
               <p>
-                <span className="font-semibold">Email:</span> {selectedOrder.email}
+                <span className="font-semibold text-gray-400">Email:</span> {selectedOrder.userInfo.email}
               </p>
               <p>
-                <span className="font-semibold">Phone:</span> {selectedOrder.phone}
+                <span className="font-semibold text-gray-400">Phone:</span> {selectedOrder.userDetails.phoneNumber}
               </p>
               <p>
-                <span className="font-semibold">Full Address:</span> {selectedOrder.address}
+                <span className="font-semibold text-gray-400">Full Address:</span> {selectedOrder.userDetails.pickupAddress}
               </p>
             </div>
             <div className="mt-4 text-right">
@@ -309,9 +312,5 @@ const handleLogout = () => {
         </div>
       )}
     </div>
-  );
-
-
-
-  
+  ); 
 }
