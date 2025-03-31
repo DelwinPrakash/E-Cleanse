@@ -4,7 +4,7 @@ const Schema = mongoose.Schema
 const recycleItemSchema = new Schema({
     userID:{
         type: Schema.Types.ObjectId,
-        ref: "User",
+        ref: "UserDetails",
         required: true
     },
     businessID: {

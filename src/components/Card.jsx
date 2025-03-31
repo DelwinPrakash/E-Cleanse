@@ -43,13 +43,13 @@ export default function Card({ user, handleOrderStatus }) {
           <div className="mt-6 border-t border-gray-700">
             <div className="mt-6 flex space-x-4">
               <button
-                onClick={() => handleOrderStatus(user._id, "accepted")}
+                onClick={() => handleOrderStatus(user._id, user.userInfo._id, "accepted")}
                 className="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-300"
               >
                 Accept
               </button>
               <button
-                onClick={() => handleOrderStatus(user._id, "rejected")}
+                onClick={() => handleOrderStatus(user._id, user.userInfo._id, "rejected")}
                 className="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-300"
               >
                 Reject
