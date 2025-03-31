@@ -1,4 +1,8 @@
+import mongoose from "mongoose";
+import RecycleItem from "../models/RecycleItem.js";
 import UserDetails from "../models/UserDetails.js"
+
+const { ObjectId } = mongoose.Types;
 
 const RecycleWaste = async (req, res) => {
     const { formData, userID } = req.body;
@@ -74,7 +78,8 @@ const getAllUsers = async (req, res) => {
                     pickupDescription: 1,
                     alternateContactNumber: 1,
                     status: 1,
-                    "userInfo.email": 1
+                    "userInfo.email": 1,
+                    "userInfo._id": 1,
                 }
             }
         ]);
@@ -96,4 +101,148 @@ const getAllUsers = async (req, res) => {
     }
 }
 
-export { RecycleWaste, getAllUsers };
+const getUserProfile = async (req, res) => {
+    const userID = new ObjectId(req.params.userID);
+    // console.log(userID);
+
+    try{
+        // const userDetails = await UserDetails.findById(userID);
+
+        // if(!userDetails){
+        //     return res.status(404).json({message: "User not found!"});
+        // }
+
+        const recycleDetails = await RecycleItem.aggregate([
+            {
+                $lookup: {
+                    from: "userdetails",
+                    localField: "userID",
+                    foreignField: "userID",
+                    as: "userDetails"
+                }
+            },
+            {
+                $unwind: "$userDetails"
+            },
+            {
+                $lookup: {
+                    from: "businesses",
+                    localField: "businessID",
+                    foreignField: "userID",
+                    as: "businessDetails"
+                }
+            },
+            {
+                $unwind: "$businessDetails"
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "businessDetails.userID",
+                    foreignField: "_id",
+                    as: "businessInfo"
+                }
+            },
+            {
+                $unwind: "$businessInfo"          
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "userDetails.userID",
+                    foreignField: "_id",
+                    as: "userInfo"
+                }
+            },
+            {
+                $match: {
+                    userID: userID
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    userID: 1,
+                    businessID: 1,
+                    status: 1,
+                    "userDetails.eWasteType": 1,
+                    "userDetails.status": 1,
+                    "businessDetails.businessName": 1,
+                    "businessDetails.phoneNumber": 1,
+                    "businessInfo.email": 1,
+                    "userDetails._id": 1,
+
+                }
+            },
+            {
+                $group: {
+                    _id: "$userDetails._id",
+                    userID: { $first: "$userID" },
+                    businessID: { $first: "$businessID" },
+                    status: { $first: "$status" },
+                    eWasteType: { $addToSet: "$userDetails.eWasteType" }, // Collect unique eWasteTypes
+                    userStatus: { $first: "$userDetails.status" },
+                    businessName: { $first: "$businessDetails.businessName" },
+                    phoneNumber: { $first: "$businessDetails.phoneNumber" },
+                    businessEmail: { $first: "$businessInfo.email" },
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    userID: 1,
+                    businessID: 1,
+                    status: 1,
+                    userStatus: 1,
+                    businessName: 1,
+                    phoneNumber: 1,
+                    businessEmail: 1,
+                    eWasteType: { $reduce: {
+                        input: "$eWasteType",
+                        initialValue: [],
+                        in: { $setUnion: ["$$value", "$$this"] }
+                    }},
+                }
+            }
+        ]);
+        
+        console.log(recycleDetails);
+        res.status(200).json({
+            success: true,
+            recycleDetails
+        });
+    }catch(error){
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch user details!",
+            error: error.message
+        })
+    }
+}
+
+const getUserPendingItems = async (req, res) => {
+    const userID = req.params.userID;
+
+    try{
+        const pendingItems = await UserDetails.find({ userID, status: "pending" });
+
+        if(!pendingItems || pendingItems.length === 0){
+            return res.status(404).json({message: "No pending items found!"});
+        }
+
+        res.status(200).json({
+            success: true,
+            pendingItems
+        });
+    }catch(error){
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch pending items!",
+            error: error.message
+        })
+    }
+}
+
+export { RecycleWaste, getAllUsers, getUserProfile, getUserPendingItems };

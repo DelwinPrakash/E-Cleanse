@@ -1,13 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function UserProfile(){
     const [showLogout, setShowLogout] = useState(false)
     const { user, logout } = useAuth();
     const [showDetails, setShowDetails] = useState(null); // State to track which request's details are visible
     const navigate = useNavigate(); // Hook for navigation
+    const [userProfile, setUserProfile] = useState([]);
+    const [userPendingItems, setUserPendingItems] = useState([]);
+    const [userLoading, setUserLoading] = useState(true);
     
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+          try{
+            const { data } = await axios.get(`http://localhost:3000/api/user-profile/${user._id}`);
+            if(data.success){
+                setUserProfile(data.recycleDetails);
+            }
+            if(userProfile.length === 0){
+                const { data } = await axios.get(`http://localhost:3000/api/user-profile/pending/${user._id}`);
+                if(data.success){
+                    setUserPendingItems(data.pendingItems);
+                }
+            }
+          }catch(error){
+            console.log(error);
+          }finally{
+            setUserLoading(false)
+          }
+        }
+        fetchUserProfile();
+    }, []);
+    console.log(userProfile)
+    console.log(userPendingItems)
     const recyclingHistory = [
         { id: 1, date: '2023-10-01', items: ['Laptop', 'Smartphone']},
         { id: 2, date: '2023-09-25', items: ['Tablet', 'Printer']},
@@ -105,11 +132,19 @@ export default function UserProfile(){
                 <div className="mt-3">
                     <h2 className="text-xl font-bold mb-4 text-gray-300">Pending Requests</h2>
                     <div className="space-y-3">
-                        {pendingRequests.map((request) => (
-                            <div key={request.id} className="bg-stone-900 p-4 rounded-lg relative">
-                                <p className="text-sm text-gray-400">Request Status: {request.status}</p>
+                        {userPendingItems.map((request) => (
+                            <div key={request._id} className="bg-stone-900 p-4 rounded-lg relative">
+                                <p className="text-sm text-gray-400">Request Status: <span className={`text-sm ${request.status === "pending" ? "text-yellow-400" : "text-red-400"}`}>{request.status}</span></p>
                                 <p className="text-lg font-semibold text-white">
-                                    Items: {request.items.join(", ")}
+                                    <span className="font-semibold text-gray-300">Items: </span>{request.eWasteType.join(", ")}
+                                </p>
+                            </div>
+                        ))}
+                        {userProfile.map((request) => (
+                            <div key={request._id} className="bg-stone-900 p-4 rounded-lg relative">
+                                <p className="text-sm text-gray-400">Request Status: <span className={`text-sm ${request.userStatus === "accepted" ? "text-green-400" : "text-red-400"}`}>{request.userStatus}</span></p>
+                                <p className="text-lg font-semibold text-white">
+                                    <span className="font-semibold text-gray-300">Items: </span>{request.eWasteType.join(", ")}
                                 </p>
 
                                 {/* QR Icon on the right side */}
@@ -134,11 +169,11 @@ export default function UserProfile(){
                                 </button>
 
                                 {/* View Details Button (only for accepted requests) */}
-                                {request.status === "Accepted" && (
+                                {request.userStatus === "accepted" && (
                                     <div className="mt-2">
                                         <button
                                             className="text-blue-400 hover:text-blue-500"
-                                            onClick={() => toggleDetails(request.id)} // Toggle details visibility
+                                            onClick={() => toggleDetails(request._id)} // Toggle details visibility
                                         >
                                             View Details
                                         </button>
@@ -146,12 +181,12 @@ export default function UserProfile(){
                                 )}
 
                                 {/* Hardcoded Details (only for accepted requests) */}
-                                {showDetails === request.id && request.status === "Accepted" && (
-                                    <div className="mt-2 p-2 bg-stone-800 rounded-lg">
-                                        <p className="text-sm text-gray-400">Organization Name: {request.id}</p>
-                                        <p className="text-sm text-white">Name of collector: {request.items.join(", ")}</p>
-                                        <p className="text-sm text-white">Contact Number: {request.status}</p>
-                                        <p className="text-sm text-white">Email: {request.qrData}</p>
+                                {showDetails === request._id && request.userStatus === "accepted" && (
+                                    <div className="mt-2 p-2 bg-stone-800 text-gray-100 rounded-lg">
+                                        <p className="text-sm"><span className="font-semibold text-gray-400">Organization Name: </span>{request.businessName}</p>
+                                        <p className="text-sm"><span className="font-semibold text-gray-400">Name of collector: </span>{request.businessName}</p>
+                                        <p className="text-sm"><span className="font-semibold text-gray-400">Contact Number: </span>{request.phoneNumber}</p>
+                                        <p className="text-sm"><span className="font-semibold text-gray-400">Email: </span>{request.businessEmail}</p>
                                     </div>
                                 )}
                             </div>
