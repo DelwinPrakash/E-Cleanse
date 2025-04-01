@@ -9,7 +9,7 @@ export default function UserProfile(){
     const [showDetails, setShowDetails] = useState(null); // State to track which request's details are visible
     const navigate = useNavigate(); // Hook for navigation
     const [userProfile, setUserProfile] = useState([]);
-    const [userPendingItems, setUserPendingItems] = useState([]);
+    // const [userPendingItems, setUserPendingItems] = useState([]);
     const [userLoading, setUserLoading] = useState(true);
     
     useEffect(() => {
@@ -19,12 +19,12 @@ export default function UserProfile(){
             if(data.success){
                 setUserProfile(data.recycleDetails);
             }
-            if(userProfile.length === 0){
-                const { data } = await axios.get(`http://localhost:3000/api/user-profile/pending/${user._id}`);
-                if(data.success){
-                    setUserPendingItems(data.pendingItems);
-                }
-            }
+            // if(userProfile.length === 0){
+            //     const { data } = await axios.get(`http://localhost:3000/api/user-profile/pending/${user._id}`);
+            //     if(data.success){
+            //         setUserPendingItems(data.pendingItems);
+            //     }
+            // }
           }catch(error){
             console.log(error);
           }finally{
@@ -34,7 +34,6 @@ export default function UserProfile(){
         fetchUserProfile();
     }, []);
     console.log(userProfile)
-    console.log(userPendingItems)
     const recyclingHistory = [
         { id: 1, date: '2023-10-01', items: ['Laptop', 'Smartphone']},
         { id: 2, date: '2023-09-25', items: ['Tablet', 'Printer']},
@@ -132,17 +131,12 @@ export default function UserProfile(){
                 <div className="mt-3">
                     <h2 className="text-xl font-bold mb-4 text-gray-300">Pending Requests</h2>
                     <div className="space-y-3">
-                        {userPendingItems.map((request) => (
-                            <div key={request._id} className="bg-stone-900 p-4 rounded-lg relative">
-                                <p className="text-sm text-gray-400">Request Status: <span className={`text-sm ${request.status === "pending" ? "text-yellow-400" : "text-red-400"}`}>{request.status}</span></p>
-                                <p className="text-lg font-semibold text-white">
-                                    <span className="font-semibold text-gray-300">Items: </span>{request.eWasteType.join(", ")}
-                                </p>
-                            </div>
-                        ))}
+                        {(userProfile.length === 0) && <div className="bg-stone-900 p-4 rounded-lg">
+                            <p className="text-sm text-gray-400">No pending request!</p>
+                        </div>}
                         {userProfile.map((request) => (
                             <div key={request._id} className="bg-stone-900 p-4 rounded-lg relative">
-                                <p className="text-sm text-gray-400">Request Status: <span className={`text-sm ${request.userStatus === "accepted" ? "text-green-400" : "text-red-400"}`}>{request.userStatus}</span></p>
+                                <p className="text-sm text-gray-400">Request Status: <span className={`text-sm ${request.userStatus === "accepted" ? "text-green-400" : "text-red-400"}`}>{request.userStatus || request.status}</span></p>
                                 <p className="text-lg font-semibold text-white">
                                     <span className="font-semibold text-gray-300">Items: </span>{request.eWasteType.join(", ")}
                                 </p>

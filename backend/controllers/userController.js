@@ -104,6 +104,7 @@ const getAllUsers = async (req, res) => {
 const getUserProfile = async (req, res) => {
     const userID = new ObjectId(req.params.userID);
     // console.log(userID);
+    let recycleDetails = [];
 
     try{
         // const userDetails = await UserDetails.findById(userID);
@@ -112,7 +113,7 @@ const getUserProfile = async (req, res) => {
         //     return res.status(404).json({message: "User not found!"});
         // }
 
-        const recycleDetails = await RecycleItem.aggregate([
+        recycleDetails = await RecycleItem.aggregate([
             {
                 $lookup: {
                     from: "userdetails",
@@ -206,7 +207,15 @@ const getUserProfile = async (req, res) => {
             }
         ]);
         
-        console.log(recycleDetails);
+        if(recycleDetails.length === 0){
+            try{
+                recycleDetails = await UserDetails.find({ userID: req.params.userID , status: "pending" });
+            }catch(error){
+                console.log(error);
+                return res.status(404).json({message: "No pending items found!"});
+            }
+        }
+
         res.status(200).json({
             success: true,
             recycleDetails
@@ -221,28 +230,28 @@ const getUserProfile = async (req, res) => {
     }
 }
 
-const getUserPendingItems = async (req, res) => {
-    const userID = req.params.userID;
+// const getUserPendingItems = async (req, res) => {
+//     const userID = req.params.userID;
 
-    try{
-        const pendingItems = await UserDetails.find({ userID, status: "pending" });
+//     try{
+//         const pendingItems = await UserDetails.find({ userID, status: "pending" });
 
-        if(!pendingItems || pendingItems.length === 0){
-            return res.status(404).json({message: "No pending items found!"});
-        }
+//         if(!pendingItems || pendingItems.length === 0){
+//             return res.status(404).json({message: "No pending items found!"});
+//         }
 
-        res.status(200).json({
-            success: true,
-            pendingItems
-        });
-    }catch(error){
-        console.log(error);
-        res.status(500).json({
-            success: false,
-            message: "Failed to fetch pending items!",
-            error: error.message
-        })
-    }
-}
+//         res.status(200).json({
+//             success: true,
+//             pendingItems
+//         });
+//     }catch(error){
+//         console.log(error);
+//         res.status(500).json({
+//             success: false,
+//             message: "Failed to fetch pending items!",
+//             error: error.message
+//         })
+//     }
+// }
 
-export { RecycleWaste, getAllUsers, getUserProfile, getUserPendingItems };
+export { RecycleWaste, getAllUsers, getUserProfile };
