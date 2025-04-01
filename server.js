@@ -8,7 +8,7 @@ import handleLogin from "./backend/controllers/authController.js";
 import verifyJWT from "./backend/controllers/verifyJWT.js";
 import verifyEmail from "./backend/controllers/verifyEmail.js";
 import { completeBusinessProfile, getBusinessDetails, getBusinessProfile, recycleItem, updateUserStatus } from "./backend/controllers/businessController.js";
-import { RecycleWaste, getAllUsers, getUserProfile, getUserPendingItems } from "./backend/controllers/userController.js";
+import { RecycleWaste, getAllUsers, getUserProfile } from "./backend/controllers/userController.js";
 
 const app = express();
 
@@ -46,7 +46,7 @@ app.get("/api/business-profile/:userID", getBusinessProfile);
 
 app.get("/api/user-profile/:userID", getUserProfile);
 
-app.get("/api/user-profile/pending/:userID", getUserPendingItems);
+// app.get("/api/user-profile/pending/:userID", getUserPendingItems);
 
 mongoose.connection.once("open", () => {
     console.log("Connected to MongoDB");

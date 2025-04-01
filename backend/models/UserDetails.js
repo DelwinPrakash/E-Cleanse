@@ -7,6 +7,10 @@ const userDetailSchema = new Schema({
         ref: "User",
         required: true,
     },
+    businessID:{
+        type: Schema.Types.ObjectId,
+        ref: "Business",
+    },
     fullName: {
         type: String,
         required: true,

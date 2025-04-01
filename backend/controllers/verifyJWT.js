@@ -12,7 +12,7 @@ const verifyJWT = async (req, res) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const user = await User.findById(decoded.userID).exec();
 
-        console.log("verifyJWT", user);
+        // console.log("verifyJWT", user);
         if(!user){
             return res.status(401).json({"message": "User not found, Unauthorized!"});
         }
