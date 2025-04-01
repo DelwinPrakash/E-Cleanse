@@ -16,6 +16,10 @@ export default function BusinessProfile() {
   const [selectedHistory, setSelectedHistory] = useState(null); // Track selected recycling history for details
   const [businessProfile, setBusinessProfile] = useState([]);
   const [userLoading, setUserLoading] = useState(true);
+  const [count, setCount] = useState({
+    accepted: 0,
+    rejected: 0
+  })
   const navigate = useNavigate(); // Hook for navigation
 
   useEffect(() => {
@@ -24,6 +28,16 @@ export default function BusinessProfile() {
         const { data } = await axios.get(`http://localhost:3000/api/business-profile/${user._id}`);
         if(data.success){
           setBusinessProfile(data.recycleDetails);
+          
+          const acceptedCount = data.recycleDetails.reduce((acc, order) => {
+            return acc + order.UserDetails.filter(item => item.status === "accepted").length;
+          }, 0);
+  
+          const rejectedCount = data.recycleDetails.reduce((acc, order) => {
+            return acc + order.UserDetails.filter(item => item.status === "rejected").length;
+          }, 0);
+  
+          setCount({ accepted: acceptedCount, rejected: rejectedCount });
         }
       }catch(error){
         console.log(error);
@@ -33,7 +47,7 @@ export default function BusinessProfile() {
     }
     fetchBusinessProfile();
   }, []);
-  
+  console.log(count)
   if (userLoading){
     return (
       <Loading/>
@@ -153,9 +167,9 @@ const handleLogout = () => {
       {/* Stats Section */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-center">
         {[
-          { label: "Total Orders", value: "128", color: "text-white" },
-          { label: "Accepted Orders", value: "86", color: "text-green-400" },
-          { label: "Rejected Orders", value: "42", color: "text-red-400" },
+          { label: "Total Orders", value: businessProfile.length, color: "text-white" },
+          { label: "Accepted Orders", value: count.accepted, color: "text-green-400" },
+          { label: "Rejected Orders", value: count.rejected, color: "text-red-400" },
         ].map((stat, index) => (
           <div key={index} className="bg-gray-800 p-6 rounded-lg shadow-md">
             <h3 className="text-lg font-semibold">{stat.label}</h3>
@@ -180,8 +194,8 @@ const handleLogout = () => {
             <tbody>
               {businessProfile.map((order, index) => (
                 <tr key={index} className="border-b border-gray-700">
-                  <td className="py-2">{order.fullName}</td>
-                  <td className="py-2">{order.eWasteType.join(", ")}</td>
+                  <td className="py-2">{order.UserDetails[0].fullName}</td>
+                  <td className="py-2">{order.UserDetails[0].eWasteType.join(", ")}</td>
                   <td className={`py-2 ${order.status === "accepted" ? "text-green-400" : "text-red-400"}`}>{order.status}</td>
                   <td className="py-2">
                     {order.status === "accepted" && ( // Only show "View Details" for accepted orders
@@ -228,16 +242,16 @@ const handleLogout = () => {
             <h3 className="text-xl font-bold text-gray-200 mb-4">Personal Details</h3>
             <div className="space-y-2 text-gray-100">
               <p>
-                <span className="font-semibold text-gray-400">User:</span> {selectedOrder.fullName}
+                <span className="font-semibold text-gray-400">User:</span> {selectedOrder.UserDetails[0].fullName}
               </p>
-              <p>
+              {/* <p>
                 <span className="font-semibold text-gray-400">Email:</span> {selectedOrder.email}
+              </p> */}
+              <p>
+                <span className="font-semibold text-gray-400">Phone:</span> {selectedOrder.UserDetails[0].phoneNumber}
               </p>
               <p>
-                <span className="font-semibold text-gray-400">Phone:</span> {selectedOrder.phoneNumber}
-              </p>
-              <p>
-                <span className="font-semibold text-gray-400">Full Address:</span> {selectedOrder.pickupAddress}
+                <span className="font-semibold text-gray-400">Full Address:</span> {selectedOrder.UserDetails[0].pickupAddress}
               </p>
             </div>
             <div className="mt-4 text-right">

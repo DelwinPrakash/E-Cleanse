@@ -33,7 +33,7 @@ export default function Business() {
   // Function to handle order status updates
   const handleOrderStatus = async (id, userID, status) => {
     try{
-      const { data } = await axios.put(`http://localhost:3000/api/user-details/${id}`, {status});
+      const { data } = await axios.put(`http://localhost:3000/api/user-details/${id}`, {status, businessID: user._id});
       console.log(data)
     }catch(error){
       console.log(error || error.response?.data?.message);
