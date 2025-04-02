@@ -16,6 +16,26 @@ const recycleItemSchema = new Schema({
         type: String,
         enum: ["accepted", "rejected"]
     },
+    fullName: {
+        type: String,
+        required: true,
+    },
+    phoneNumber: {
+        type: String,
+        required: true,
+    },
+    pickupAddress: {
+        type: String,
+        required: true,
+    },
+    eWasteType: {
+        type: [String],
+        required: true,
+    },
+    verifyCaptcha: {
+        type: String,
+        required: true,
+    },
     createdAt: {
         type: Date,
         default: Date.now
