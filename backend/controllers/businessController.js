@@ -63,11 +63,17 @@ const getBusinessDetails = async (req, res) => {
 const updateUserStatus = async (req, res) => {      //when the business accepts the order
     const userID = req.params.userID;
     const { status, businessID } = req.body;
+    // let updatedUserStatus;
     try {
         const updatedUserStatus = await UserDetails.findOneAndUpdate({_id: userID}, {status, businessID});
         if (!updatedUserStatus) {
             return res.status(404).json({ message: "User details not found" });
         }
+        // if(status === "accepted"){
+        //     updatedUserStatus = await UserDetails.findOneAndUpdate({_id: userID}, {status, businessID});
+        // }else{
+        //     updatedUserStatus = await UserDetails.findOneAndUpdate({_id: userID}, {businessID});
+        // }
         res.status(200).json({ message: "Status and businessID updated successfully", updatedUserStatus });
     } catch (error) {
         res.status(500).json({ message: "Failed to update status and businessID", error: error.message });
