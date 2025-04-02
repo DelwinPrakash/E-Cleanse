@@ -103,8 +103,6 @@ const getAllUsers = async (req, res) => {
 
 const getUserProfile = async (req, res) => {
     const userID = new ObjectId(req.params.userID);
-    // console.log(userID);
-    let recycleDetails = [];
 
     try{
         // const userDetails = await UserDetails.findById(userID);
@@ -113,17 +111,22 @@ const getUserProfile = async (req, res) => {
         //     return res.status(404).json({message: "User not found!"});
         // }
 
-        recycleDetails = await RecycleItem.aggregate([
+        const recycleDetails = await RecycleItem.aggregate([
+            // {
+            //     $lookup: {
+            //         from: "userdetails",
+            //         localField: "userID",
+            //         foreignField: "userID",
+            //         as: "userDetails"
+            //     }
+            // },
+            // {
+            //     $unwind: "$userDetails"
+            // },
             {
-                $lookup: {
-                    from: "userdetails",
-                    localField: "userID",
-                    foreignField: "userID",
-                    as: "userDetails"
+                $match: {
+                    userID: userID
                 }
-            },
-            {
-                $unwind: "$userDetails"
             },
             {
                 $lookup: {
@@ -147,64 +150,64 @@ const getUserProfile = async (req, res) => {
             {
                 $unwind: "$businessInfo"          
             },
-            {
-                $lookup: {
-                    from: "users",
-                    localField: "userDetails.userID",
-                    foreignField: "_id",
-                    as: "userInfo"
-                }
-            },
-            {
-                $match: {
-                    userID: userID
-                }
-            },
-            {
-                $project: {
-                    _id: 1,
-                    userID: 1,
-                    businessID: 1,
-                    status: 1,
-                    "userDetails.eWasteType": 1,
-                    "userDetails.status": 1,
-                    "businessDetails.businessName": 1,
-                    "businessDetails.phoneNumber": 1,
-                    "businessInfo.email": 1,
-                    "userDetails._id": 1,
+            // {
+            //     $lookup: {
+            //         from: "users",
+            //         localField: "userDetails.userID",
+            //         foreignField: "_id",
+            //         as: "userInfo"
+            //     }
+            // },
+            // {
+            //     $match: {
+            //         userID: userID
+            //     }
+            // },
+            // {
+            //     $project: {
+            //         _id: 1,
+            //         userID: 1,
+            //         businessID: 1,
+            //         status: 1,
+            //         "userDetails.eWasteType": 1,
+            //         "userDetails.status": 1,
+            //         "businessDetails.businessName": 1,
+            //         "businessDetails.phoneNumber": 1,
+            //         "businessInfo.email": 1,
+            //         "userDetails._id": 1,
 
-                }
-            },
-            {
-                $group: {
-                    _id: "$userDetails._id",
-                    userID: { $first: "$userID" },
-                    businessID: { $first: "$businessID" },
-                    status: { $first: "$status" },
-                    eWasteType: { $addToSet: "$userDetails.eWasteType" }, // Collect unique eWasteTypes
-                    userStatus: { $first: "$userDetails.status" },
-                    businessName: { $first: "$businessDetails.businessName" },
-                    phoneNumber: { $first: "$businessDetails.phoneNumber" },
-                    businessEmail: { $first: "$businessInfo.email" },
-                }
-            },
-            {
-                $project: {
-                    _id: 1,
-                    userID: 1,
-                    businessID: 1,
-                    status: 1,
-                    userStatus: 1,
-                    businessName: 1,
-                    phoneNumber: 1,
-                    businessEmail: 1,
-                    eWasteType: { $reduce: {
-                        input: "$eWasteType",
-                        initialValue: [],
-                        in: { $setUnion: ["$$value", "$$this"] }
-                    }},
-                }
-            }
+            //     }
+            // },
+            // {
+            //     $group: {
+            //         _id: "$userDetails._id",
+            //         userID: { $first: "$userID" },
+            //         businessID: { $first: "$businessID" },
+            //         status: { $first: "$status" },
+            //         eWasteType: { $addToSet: "$userDetails.eWasteType" }, // Collect unique eWasteTypes
+            //         userStatus: { $first: "$userDetails.status" },
+            //         businessName: { $first: "$businessDetails.businessName" },
+            //         phoneNumber: { $first: "$businessDetails.phoneNumber" },
+            //         businessEmail: { $first: "$businessInfo.email" },
+            //     }
+            // },
+            // {
+            //     $project: {
+            //         _id: 1,
+            //         userID: 1,
+            //         businessID: 1,
+            //         status: 1,
+            //         userStatus: 1,
+            //         businessName: 1,
+            //         phoneNumber: 1,
+            //         businessEmail: 1,
+            //         eWasteType: { $reduce: {
+            //             input: "$eWasteType",
+            //             initialValue: [],
+            //             in: { $setUnion: ["$$value", "$$this"] }
+            //         }},
+            //     }
+            // }
         ]);
         
         if(recycleDetails.length === 0){

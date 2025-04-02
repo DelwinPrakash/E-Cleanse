@@ -63,17 +63,17 @@ const getBusinessDetails = async (req, res) => {
 const updateUserStatus = async (req, res) => {      //when the business accepts the order
     const userID = req.params.userID;
     const { status, businessID } = req.body;
-    // let updatedUserStatus;
+    let updatedUserStatus;
     try {
-        const updatedUserStatus = await UserDetails.findOneAndUpdate({_id: userID}, {status, businessID});
+        // const updatedUserStatus = await UserDetails.findOneAndUpdate({_id: userID}, {status, businessID});
+        if(status === "accepted"){
+            updatedUserStatus = await UserDetails.findOneAndUpdate({_id: userID}, {status, businessID});
+        }else{
+            updatedUserStatus = await UserDetails.findOneAndUpdate({_id: userID}, {businessID});
+        }
         if (!updatedUserStatus) {
             return res.status(404).json({ message: "User details not found" });
         }
-        // if(status === "accepted"){
-        //     updatedUserStatus = await UserDetails.findOneAndUpdate({_id: userID}, {status, businessID});
-        // }else{
-        //     updatedUserStatus = await UserDetails.findOneAndUpdate({_id: userID}, {businessID});
-        // }
         res.status(200).json({ message: "Status and businessID updated successfully", updatedUserStatus });
     } catch (error) {
         res.status(500).json({ message: "Failed to update status and businessID", error: error.message });
@@ -81,13 +81,20 @@ const updateUserStatus = async (req, res) => {      //when the business accepts 
 }
 
 const recycleItem = async (req, res) => {
-    const { userID, businessID, status } = req.body;
+    const { userID, businessID, status, fullName, phoneNumber, pickupAddress, eWasteType, verifyCaptcha } = req.body;
+    console.log(verifyCaptcha)
     try {
         const newRecycleItem = await RecycleItem.create({
             userID,
             businessID,
-            status
+            status,
+            fullName,
+            phoneNumber,
+            pickupAddress,
+            eWasteType,
+            verifyCaptcha
         });
+        console.log(newRecycleItem)
         res.status(201).json({ message: "Recycle item created successfully", newRecycleItem });
     } catch (error) {
         res.status(500).json({ message: "Failed to create recycle item", error: error.message });
@@ -100,34 +107,48 @@ const getBusinessProfile = async (req, res) => {
     try{
         const recycleDetails = await RecycleItem.aggregate([
             {
-                $lookup: {
-                    from: "userdetails",
-                    localField: "userID",
-                    foreignField: "userID",
-                    as: "UserDetails"
-                }
-            },
-            {
                 $match: {
                     businessID: businessID
                 }
             },
             {
-                $project: {
-                    _id: 1,
-                    userID: 1,
-                    businessID: 1,
-                    status: 1,
-                    createdAt: 1,
-                    UserDetails: {
-                        $filter: {
-                            input: "$UserDetails",
-                            as: "user",
-                            cond: { $eq: ["$$user.businessID", "$businessID"] }
-                        }
-                    }
+                $lookup: {
+                    from: "users",
+                    localField: "userID",
+                    foreignField: "_id",
+                    as: "userInfo"
                 }
             },
+            {
+                $unwind: "$userInfo"          
+            },
+            // {
+            //     $lookup: {
+            //         from: "users",              
+            //         localField: "UserDetails.userID",      
+            //         foreignField: "_id",       
+            //         as: "userInfo"
+            //     }
+            // },
+            // {
+            //     $unwind: "$userInfo"          
+            // },
+            // {
+            //     $project: {
+            //         _id: 1,
+            //         userID: 1,
+            //         businessID: 1,
+            //         status: 1,
+            //         createdAt: 1,
+            //         UserDetails: {
+            //             $filter: {
+            //                 input: "$UserDetails",
+            //                 as: "user",
+            //                 cond: { $eq: ["$$user.businessID", "$businessID"] }
+            //             }
+            //         }
+            //     }
+            // },
         ]);
         res.status(200).json({
             success: true,
