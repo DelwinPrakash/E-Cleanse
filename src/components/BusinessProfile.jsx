@@ -19,7 +19,8 @@ export default function BusinessProfile() {
   const [count, setCount] = useState({
     accepted: 0,
     rejected: 0
-  })
+  });
+  const [captcha, setCaptcha] = useState('');
   const navigate = useNavigate(); // Hook for navigation
 
   useEffect(() => {
@@ -28,15 +29,14 @@ export default function BusinessProfile() {
         const { data } = await axios.get(`http://localhost:3000/api/business-profile/${user._id}`);
         if(data.success){
           setBusinessProfile(data.recycleDetails);
-          
+          console.log(data.recycleDetails)
           const acceptedCount = data.recycleDetails.reduce((acc, order) => {
-            return acc + order.UserDetails.filter(item => item.status === "accepted").length;
+            return acc + (order.status === "accepted" ? 1 : 0);
           }, 0);
-  
+          
           const rejectedCount = data.recycleDetails.reduce((acc, order) => {
-            return acc + order.UserDetails.filter(item => item.status === "rejected").length;
-          }, 0);
-  
+            return acc + (order.status === "rejected" ? 1 : 0);
+          }, 0);          
           setCount({ accepted: acceptedCount, rejected: rejectedCount });
         }
       }catch(error){
@@ -47,13 +47,12 @@ export default function BusinessProfile() {
     }
     fetchBusinessProfile();
   }, []);
-  console.log(count)
+
   if (userLoading){
     return (
       <Loading/>
     );
   }
-  
   const recyclingHistory = [
     {
         id: 1,
@@ -90,6 +89,10 @@ export default function BusinessProfile() {
     },
   ];
   
+  const verifyCaptcha = () => {
+    console.log(captcha)
+  }
+
   // Function to toggle modal and set selected order
   const toggleModal = (order) => {
     setSelectedOrder(order);
@@ -187,8 +190,8 @@ const handleLogout = () => {
             <tbody>
               {businessProfile.map((order, index) => (
                 <tr key={index} className="border-b border-gray-700">
-                  <td className="py-2">{order.UserDetails[0].fullName}</td>
-                  <td className="py-2">{order.UserDetails[0].eWasteType.join(", ")}</td>
+                  <td className="py-2">{order.fullName}</td>
+                  <td className="py-2">{order.eWasteType.join(", ")}</td>
                   <td className={`py-2 ${order.status === "accepted" ? "text-green-400" : "text-red-400"}`}>{order.status}</td>
                   <td className="py-2">
                     {order.status === "accepted" && ( // Only show "View Details" for accepted orders
@@ -235,16 +238,16 @@ const handleLogout = () => {
             <h3 className="text-xl font-bold text-gray-200 mb-4">Personal Details</h3>
             <div className="space-y-2 text-gray-100">
               <p>
-                <span className="font-semibold text-gray-400">User:</span> {selectedOrder.UserDetails[0].fullName}
-              </p>
-              {/* <p>
-                <span className="font-semibold text-gray-400">Email:</span> {selectedOrder.email}
-              </p> */}
-              <p>
-                <span className="font-semibold text-gray-400">Phone:</span> {selectedOrder.UserDetails[0].phoneNumber}
+                <span className="font-semibold text-gray-400">User:</span> {selectedOrder.fullName}
               </p>
               <p>
-                <span className="font-semibold text-gray-400">Full Address:</span> {selectedOrder.UserDetails[0].pickupAddress}
+                <span className="font-semibold text-gray-400">Email:</span> {selectedOrder.userInfo.email}
+              </p>
+              <p>
+                <span className="font-semibold text-gray-400">Phone:</span> {selectedOrder.phoneNumber}
+              </p>
+              <p>
+                <span className="font-semibold text-gray-400">Full Address:</span> {selectedOrder.pickupAddress}
               </p>
             </div>
             <div className="mt-4 text-right">
@@ -298,33 +301,35 @@ const handleLogout = () => {
 
       {/* Captcha Reader Modal */}
       {IsCaptchaOpen && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000] px-4">
-    <div className="bg-gray-800 p-6 rounded-lg shadow-lg max-w-lg w-full relative">
-      <h3 className="text-xl font-bold text-gray-200 mb-4">Check Captcha</h3>
-      <div>
-        <input 
-          type="text" 
-          className="w-full px-4 py-3 text-base bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-gray-400"
-          placeholder="Enter captcha here"
-        />
-      </div>
-      <div className="mt-6 flex justify-end space-x-3">
-        <button
-          onClick={() => setIsCaptchaOpen(false)}
-          className="px-5 py-2.5 text-sm font-medium rounded-lg border border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200"
-        >
-          Close
-        </button>
-        <button
-          onClick={() => setIsCaptchaOpen(false)}
-          className="px-5 py-2.5 text-sm font-medium rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-        >
-          Verify
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000] px-4">
+          <div className="bg-gray-800 p-6 rounded-lg shadow-lg max-w-lg w-full relative">
+            <h3 className="text-xl font-bold text-gray-200 mb-4">Check Captcha</h3>
+            <div>
+              <input 
+                type="text" 
+                className="w-full px-4 py-3 text-base bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-gray-400"
+                placeholder="Enter captcha here"
+                value={captcha}
+                onChange={(e) => setCaptcha(e.target.value)}
+              />
+            </div>
+            <div className="mt-6 flex justify-end space-x-3">
+              <button
+                onClick={() => setIsCaptchaOpen(false)}
+                className="px-5 py-2.5 text-sm font-medium rounded-lg border border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200"
+              >
+                Close
+              </button>
+              <button
+                onClick={verifyCaptcha}
+                className="px-5 py-2.5 text-sm font-medium rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+              >
+                Verify
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   ); 
 }

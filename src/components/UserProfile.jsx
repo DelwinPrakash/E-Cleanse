@@ -15,28 +15,16 @@ export default function UserProfile(){
     const [showCaptcha, setShowCaptcha] = useState(false);
     const [captchaStates, setCaptchaStates] = useState({});
 
-
-        // Function to generate random captcha string
-        const generateCaptcha = () => {
-            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
-            let captcha = '';
-            for (let i = 0; i < 6; i++) {
-                captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+    const handleShowCaptcha = (requestId) => {
+        const newCaptcha = generateCaptcha();
+        setCaptchaStates(prev => ({
+            ...prev,
+            [requestId]: {
+                show: true,
+                value: newCaptcha
             }
-            return captcha;
-        };
-    
-        const handleShowCaptcha = (requestId) => {
-            const newCaptcha = generateCaptcha();
-            setCaptchaStates(prev => ({
-                ...prev,
-                [requestId]: {
-                    show: true,
-                    value: newCaptcha
-                }
-            }));
-        };
-    
+        }));
+    };
     
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -44,6 +32,7 @@ export default function UserProfile(){
             const { data } = await axios.get(`http://localhost:3000/api/user-profile/${user._id}`);
             if(data.success){
                 setUserProfile(data.recycleDetails);
+                console.log(data.recycleDetails);
             }
             // if(userProfile.length === 0){
             //     const { data } = await axios.get(`http://localhost:3000/api/user-profile/pending/${user._id}`);
@@ -159,20 +148,20 @@ export default function UserProfile(){
                         </div>}
                         {userProfile.map((request) => (
                             <div key={request._id} className="bg-stone-900 p-4 rounded-lg relative">
-                                {request.userStatus === "pending" &&(<button onClick={() => deleteRequest(request._id)} className="absolute right-4 top-7 text-gray-400 hover:text-red-400">
+                                {request.status === "pending" &&(<button onClick={() => deleteRequest(request._id)} className="absolute right-4 top-7 text-gray-400 hover:text-red-400">
                                     <FaTrash className="h-5 w-5" />
                                 </button>)}
-                                <p className="text-sm text-gray-400">Request Status: <span className={`text-sm ${request.userStatus === "accepted" ? "text-green-400" : "text-red-400"}`}>{request.userStatus || request.status}</span></p>
+                                <p className="text-sm text-gray-400">Request Status: <span className={`text-sm ${request.status === "accepted" ? "text-green-400" : "text-red-400"}`}>{request.status || request.status}</span></p>
                                 <p className="text-lg font-semibold text-white">
                                     <span className="font-semibold text-gray-300">Items: </span>{request.eWasteType.join(", ")}
                                 </p>
 
                                 {/* captcha Icon on the right side */}
-                                {request.userStatus === "accepted" && (
+                                {request.status === "accepted" && (
                                     <div className="absolute top-4 right-4">
-                                        {captchaStates[request._id]?.show ? (
+                                        {request.verifyCaptcha ? (
                                             <div className="p-2 text-white bg-stone-900 rounded">
-                                                {captchaStates[request._id].value}
+                                                {request.verifyCaptcha  }
                                             </div>
                                         ) : (
                                             <button
@@ -186,7 +175,7 @@ export default function UserProfile(){
                                 )}
 
                                 {/* View Details Button (only for accepted requests) */}
-                                {request.userStatus === "accepted" && (
+                                {request.status === "accepted" && (
                                     <div className="mt-2">
                                         <button
                                             className="text-blue-400 hover:text-blue-500"
@@ -198,12 +187,12 @@ export default function UserProfile(){
                                 )}
 
                                 {/* Hardcoded Details (only for accepted requests) */}
-                                {showDetails === request._id && request.userStatus === "accepted" && (
+                                {showDetails === request._id && request.status === "accepted" && (
                                     <div className="mt-2 p-2 bg-stone-800 text-gray-100 rounded-lg">
-                                        <p className="text-sm"><span className="font-semibold text-gray-400">Organization Name: </span>{request.businessName}</p>
-                                        <p className="text-sm"><span className="font-semibold text-gray-400">Name of collector: </span>{request.businessName}</p>
+                                        <p className="text-sm"><span className="font-semibold text-gray-400">Organization Name: </span>{request.businessDetails.businessName}</p>
+                                        <p className="text-sm"><span className="font-semibold text-gray-400">Name of collector: </span>{request.businessDetails.businessName}</p>
                                         <p className="text-sm"><span className="font-semibold text-gray-400">Contact Number: </span>{request.phoneNumber}</p>
-                                        <p className="text-sm"><span className="font-semibold text-gray-400">Email: </span>{request.businessEmail}</p>
+                                        <p className="text-sm"><span className="font-semibold text-gray-400">Email: </span>{request.businessInfo.email}</p>
                                     </div>
                                 )}
                             </div>
