@@ -458,11 +458,16 @@ function RegisterWaste() {
             <button
               type="submit"
               className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition duration-300"
-            //   onClick={() => {
+               onClick={() => {
             //     // alert('Woohoo! Thanks for doing your part. 🎉');
             //     // navigate('/qrcode');
             //     handleSubmit();
-            // }}
+              const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+              let captcha = '';
+              for (let i = 0; i < 6; i++) {
+                captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+              }
+             }}
             >
               Submit Waste Registration
             </button>

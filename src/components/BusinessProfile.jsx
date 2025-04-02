@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 // import QrScanner from "react-qr-scanner"; // Import react-qr-scanner
-import { FaQrcode, FaSignOutAlt } from "react-icons/fa"; // Import QR code and logout icons from react-icons
+import {  FaSignOutAlt } from "react-icons/fa"; // Import QR code and logout icons from react-icons
 import { useAuth } from "../context/AuthProvider";
 import Loading from "./Loading";
 import axios from "axios";
@@ -11,7 +11,7 @@ export default function BusinessProfile() {
 
   const [isModalOpen, setIsModalOpen] = useState(false); // Track modal visibility
   const [selectedOrder, setSelectedOrder] = useState(null); // Track selected order for personal details
-  const [isScannerOpen, setIsScannerOpen] = useState(false); // Track QR Scanner modal visibility
+  const [IsCaptchaOpen, setIsCaptchaOpen] = useState(false); // Track QR Scanner modal visibility
   const [scannedData, setScannedData] = useState(""); // Store scanned QR data
   const [selectedHistory, setSelectedHistory] = useState(null); // Track selected recycling history for details
   const [businessProfile, setBusinessProfile] = useState([]);
@@ -101,14 +101,7 @@ export default function BusinessProfile() {
     setSelectedHistory(history);
   };
 
-  // Function to handle QR code scan
-  const handleScan = (data) => {
-    if (data) {
-      setScannedData(data.text); // Extract scanned data
-      setIsScannerOpen(false); // Close scanner after successful scan
-      alert(`Scanned Data: ${data.text}`); // Display scanned data
-    }
-  };
+
   
   // Function to handle QR scanner errors
   const handleError = (err) => {
@@ -127,12 +120,12 @@ const handleLogout = () => {
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-xl font-semibold text-gray-100"></h3>
           <div className="flex space-x-4">
-            {/* QR Code Icon */}
+            {/* Captcha Reading*/}
             <div
-              onClick={() => setIsScannerOpen(true)}
+              onClick={() => setIsCaptchaOpen(true)}
               className="p-2 bg-blue-500 h-10 text-white rounded-lg hover:bg-blue-600 cursor-pointer"
             >
-              <FaQrcode className="text-2xl" /> {/* QR Code Icon */}
+              Captcha
             </div>
 
             {/* Logout Button */}
@@ -303,28 +296,35 @@ const handleLogout = () => {
         </div>
       )}
 
-      {/* QR Code Scanner Modal */}
-      {isScannerOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000] px-4">
-          <div className="bg-gray-800 p-6 rounded-lg shadow-lg max-w-lg w-full relative">
-            <h3 className="text-xl font-bold text-gray-200 mb-4">Scan QR Code</h3>
-            {/* <QrScanner
-              delay={300} // Delay between scans
-              onError={handleError} // Handle errors
-              onScan={handleScan} // Handle successful scans
-              style={{ width: "100%" }} // Styling for the scanner
-            /> */}
-            <div className="mt-4 text-right">
-              <button
-                onClick={() => setIsScannerOpen(false)}
-                className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700"
-              >
-                Close Scanner
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Captcha Reader Modal */}
+      {IsCaptchaOpen && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000] px-4">
+    <div className="bg-gray-800 p-6 rounded-lg shadow-lg max-w-lg w-full relative">
+      <h3 className="text-xl font-bold text-gray-200 mb-4">Check Captcha</h3>
+      <div>
+        <input 
+          type="text" 
+          className="w-full px-4 py-3 text-base bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-gray-400"
+          placeholder="Enter captcha here"
+        />
+      </div>
+      <div className="mt-6 flex justify-end space-x-3">
+        <button
+          onClick={() => setIsCaptchaOpen(false)}
+          className="px-5 py-2.5 text-sm font-medium rounded-lg border border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200"
+        >
+          Close
+        </button>
+        <button
+          onClick={() => setIsCaptchaOpen(false)}
+          className="px-5 py-2.5 text-sm font-medium rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+        >
+          Verify
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   ); 
 }
