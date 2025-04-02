@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import {FaTrash} from "react-icons/fa"
 
 export default function UserProfile(){
     const [showLogout, setShowLogout] = useState(false)
@@ -158,6 +159,9 @@ export default function UserProfile(){
                         </div>}
                         {userProfile.map((request) => (
                             <div key={request._id} className="bg-stone-900 p-4 rounded-lg relative">
+                                {request.userStatus === "pending" &&(<button onClick={() => deleteRequest(request._id)} className="absolute right-4 top-7 text-gray-400 hover:text-red-400">
+                                    <FaTrash className="h-5 w-5" />
+                                </button>)}
                                 <p className="text-sm text-gray-400">Request Status: <span className={`text-sm ${request.userStatus === "accepted" ? "text-green-400" : "text-red-400"}`}>{request.userStatus || request.status}</span></p>
                                 <p className="text-lg font-semibold text-white">
                                     <span className="font-semibold text-gray-300">Items: </span>{request.eWasteType.join(", ")}
@@ -172,10 +176,10 @@ export default function UserProfile(){
                                             </div>
                                         ) : (
                                             <button
-                                                className="p-2 text-gray-400 hover:text-white focus:outline-none"
+                                                className="p-2  text-gray-400 hover:text-white focus:outline-none"
                                                 onClick={() => handleShowCaptcha(request._id)}
                                             >   
-                                                View Captcha
+                                                <label htmlFor="" className="text-sm sm:text-lg">View Captcha</label>
                                             </button>
                                         )}
                                     </div>
