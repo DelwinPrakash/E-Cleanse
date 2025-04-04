@@ -10,9 +10,9 @@ export default function UserProfile(){
     const [showDetails, setShowDetails] = useState(null); // State to track which request's details are visible
     const navigate = useNavigate(); // Hook for navigation
     const [userProfile, setUserProfile] = useState([]);
+    const [userPending, setUserPending] = useState([]);
     const [recyclingHistory, setRecyclingHistory] = useState([]);
     
-    // const [userPendingItems, setUserPendingItems] = useState([]);
     const [userLoading, setUserLoading] = useState(true);
     const [showCaptcha, setShowCaptcha] = useState(false);
     const [captchaStates, setCaptchaStates] = useState({});
@@ -23,7 +23,8 @@ export default function UserProfile(){
             const { data } = await axios.get(`http://localhost:3000/api/user-profile/${user._id}`);
             if(data.success){
                 setUserProfile(data.recycleDetails);
-                console.log("hiiiiiiiii", data.recycleDetails);
+                setUserPending(data.pendingItems);
+                // console.log("hiiiiiiiii", data.recycleDetails);
             }
             // if(userProfile.length === 0){
             //     const { data } = await axios.get(`http://localhost:3000/api/user-profile/pending/${user._id}`);
@@ -78,26 +79,26 @@ export default function UserProfile(){
     };
     
 
-    const recyclingHistoryy = [
-        { id: 1, date: '2023-10-01', items: ['Laptop', 'Smartphone']},
-        { id: 2, date: '2023-09-25', items: ['Tablet', 'Printer']},
-        { id: 3, date: '2023-09-18', items: ['Monitor', 'Keyboard']},
-    ];
+    // const recyclingHistoryy = [
+    //     { id: 1, date: '2023-10-01', items: ['Laptop', 'Smartphone']},
+    //     { id: 2, date: '2023-09-25', items: ['Tablet', 'Printer']},
+    //     { id: 3, date: '2023-09-18', items: ['Monitor', 'Keyboard']},
+    // ];
 
-    const pendingRequests = [
-        {
-          id: 1,
-          items: ["Wires", "Batteries"],
-          status: "Pending",
-          qrData: "PendingRequest1", // Unique QR data for each request
-        },
-        {
-          id: 2,
-          items: ["Old Phone"],
-          status: "Accepted",
-          qrData: "AcceptedRequest2", // Unique QR data for each request
-        },
-    ];
+    // const pendingRequests = [
+    //     {
+    //       id: 1,
+    //       items: ["Wires", "Batteries"],
+    //       status: "Pending",
+    //       qrData: "PendingRequest1", // Unique QR data for each request
+    //     },
+    //     {
+    //       id: 2,
+    //       items: ["Old Phone"],
+    //       status: "Accepted",
+    //       qrData: "AcceptedRequest2", // Unique QR data for each request
+    //     },
+    // ];
 
     let userDetails = {};
     if(user){
@@ -106,7 +107,7 @@ export default function UserProfile(){
             email: user.email,
             profilePicture: 'https://picsum.photos/200/300?random=4',
             totalRecycled: recyclingHistory.length,
-            pendingRequest: pendingRequests.length,
+            pendingRequest: (userProfile.length + userPending.length) || 0,
         };
     }
     
@@ -242,6 +243,56 @@ export default function UserProfile(){
                                 )}
                             </div>
                         ))}
+                        {userProfile.length !== 0 ? userPending.map((request) => (
+                            <div key={request._id} className="bg-stone-900 p-4 rounded-lg relative">
+                                {request.status === "pending" &&(<button onClick={() => deleteRequest(request._id)} className="absolute right-4 top-7 text-gray-400 hover:text-red-400">
+                                    <FaTrash className="h-5 w-5" />
+                                </button>)}
+                                <p className="text-sm text-gray-400">Request Status: <span className={`text-sm text-yellow-400`}>{request.status}</span></p>
+                                <p className="text-lg font-semibold text-white">
+                                    <span className="font-semibold text-gray-300">Items: </span>{request.eWasteType.join(", ")}
+                                </p>
+
+                                {request.status === "accepted" || request.status === "ready" && (
+                                    <div className="absolute top-2 right-2">
+                                        <button
+                                            className="p-2 text-gray-400 hover:text-white focus:outline-none"
+                                            onClick={() => handleShowCaptcha(request._id)}
+                                        >
+                                            {captchaStates[request._id]?.show ? "Hide Captcha" : "View Captcha"}
+                                        </button>
+
+                                        {captchaStates[request._id]?.show && request.verifyCaptcha && (
+                                            <div className="p-2 text-white rounded absolute right-0 top-7">
+                                                {request.verifyCaptcha}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                {/* View Details Button (only for accepted requests) */}
+                                {request.status === "ready" && (
+                                    <div className="mt-2">
+                                        <button
+                                            className="text-blue-400 hover:text-blue-500"
+                                            onClick={() => toggleDetails(request._id)} // Toggle details visibility
+                                        >
+                                            View Details
+                                        </button>
+                                    </div>
+                                )}
+
+                                {/* Hardcoded Details (only for accepted requests) */}
+                                {showDetails === request._id && request.status === "ready" && (
+                                    <div className="mt-2 p-2 bg-stone-800 text-gray-100 rounded-lg">
+                                        <p className="text-sm"><span className="font-semibold text-gray-400">Organization Name: </span>{request.businessDetails.businessName}</p>
+                                        <p className="text-sm"><span className="font-semibold text-gray-400">Name of collector: </span>{request.businessDetails.businessName}</p>
+                                        <p className="text-sm"><span className="font-semibold text-gray-400">Contact Number: </span>{request.phoneNumber}</p>
+                                        <p className="text-sm"><span className="font-semibold text-gray-400">Email: </span>{request.businessInfo.email}</p>
+                                    </div>
+                                )}
+                            </div>
+                        )):""}
                     </div>
                 </div>
 

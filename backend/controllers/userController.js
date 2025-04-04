@@ -219,10 +219,13 @@ const getUserProfile = async (req, res) => {
                 return res.status(404).json({message: "No pending items found!"});
             }
         }
-
+        
+        const pendingItems = await UserDetails.find({ userID: req.params.userID , status: "pending" });
+        
         res.status(200).json({
             success: true,
-            recycleDetails
+            recycleDetails,
+            pendingItems
         });
     }catch(error){
         console.log(error);
