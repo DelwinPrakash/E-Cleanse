@@ -3,6 +3,7 @@ import BusinessDetails from "../models/BusinessDetails.js";
 import RecycleItem from "../models/RecycleItem.js";
 import User from "../models/User.js";
 import UserDetails from "../models/UserDetails.js";
+import RecentRecycle from "../models/RecentRecycle.js";
 
 const { ObjectId } = mongoose.Types;
 
@@ -66,11 +67,11 @@ const updateUserStatus = async (req, res) => {      //when the business accepts 
     let updatedUserStatus;
     try {
         // const updatedUserStatus = await UserDetails.findOneAndUpdate({_id: userID}, {status, businessID});
-        if(status === "accepted"){
-            updatedUserStatus = await UserDetails.findOneAndUpdate({_id: userID}, {status, businessID});
-        }else{
-            updatedUserStatus = await UserDetails.findOneAndUpdate({_id: userID}, {businessID});
-        }
+        // if(status === "accepted"){
+        //     updatedUserStatus = await UserDetails.findOneAndUpdate({_id: userID}, {status, businessID});
+        // }else{
+        updatedUserStatus = await UserDetails.findOneAndUpdate({_id: userID}, {businessID, status: "ready"});
+        // }
         if (!updatedUserStatus) {
             return res.status(404).json({ message: "User details not found" });
         }
@@ -81,17 +82,19 @@ const updateUserStatus = async (req, res) => {      //when the business accepts 
 }
 
 const recycleItem = async (req, res) => {
-    const { userID, businessID, status, fullName, phoneNumber, pickupAddress, eWasteType, verifyCaptcha } = req.body;
+    const { userID, businessID, fullName, phoneNumber, pickupAddress, eWasteType, preferredDate, preferredTime, verifyCaptcha } = req.body;
     console.log(verifyCaptcha)
     try {
         const newRecycleItem = await RecycleItem.create({
             userID,
             businessID,
-            status,
+            status: "ready",
             fullName,
             phoneNumber,
             pickupAddress,
             eWasteType,
+            preferredDate,
+            preferredTime,
             verifyCaptcha
         });
         console.log(newRecycleItem)
@@ -164,4 +167,73 @@ const getBusinessProfile = async (req, res) => {
     }
 }
 
-export { completeBusinessProfile, getBusinessDetails, updateUserStatus, recycleItem, getBusinessProfile };
+const collectEWaste = async (req, res) => {
+    const { captcha } = req.body;
+    // const businessID = new ObjectId(req.params.userID);
+    try {
+        const recycleItem = await RecycleItem.findOne({ verifyCaptcha: captcha });
+
+        if (!recycleItem) {
+            console.log("recycleItem not found");
+            return res.status(404).json({ success: false, message: "Recycle item not found or captcha failed" });
+        }
+        const recentRecycle = await RecentRecycle.create({
+            userID: recycleItem.userID,
+            businessID: recycleItem.businessID,
+            status: "collected",
+            fullName: recycleItem.fullName,
+            phoneNumber: recycleItem.phoneNumber,
+            pickupAddress: recycleItem.pickupAddress,
+            eWasteType: recycleItem.eWasteType,
+            verifyCaptcha: recycleItem.verifyCaptcha
+        });
+        
+        await UserDetails.findOneAndUpdate({ userID: recycleItem.userID }, {status: "completed"});
+        await RecycleItem.deleteOne({ userID: recycleItem.userID });
+
+        res.status(201).json({ success: true, message: "Recent recycle item created successfully", recentRecycle });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to create recycle item", error: error.message });
+    }
+}
+
+const getRecycleHistory = async (req, res) => {
+    const businessID = new ObjectId(req.params.userID);
+    console.log(businessID);
+    try{
+        const recentOrders = await RecentRecycle.aggregate([
+            {
+                $match: {
+                    businessID: businessID,
+
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "userID",
+                    foreignField: "_id",
+                    as: "userInfo"
+                }
+            },
+            {
+                $unwind: "$userInfo"          
+            },
+        ]);
+        console.log(recentOrders);
+        res.status(200).json({
+            success: true,
+            recentOrders
+        });
+    }catch(error){
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch all details!",
+            error: error.message
+        })
+    }
+}
+    
+
+export { completeBusinessProfile, getBusinessDetails, updateUserStatus, recycleItem, getBusinessProfile, collectEWaste, getRecycleHistory };
