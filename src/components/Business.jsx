@@ -53,11 +53,13 @@ export default function Business() {
       const { data } = await axios.post(`http://localhost:3000/api/recycle-item`, {
         userID: userID,   //from user collection
         businessID: user._id,
-        status,
+        // status,
         fullName: userInfo.fullName,
         phoneNumber: userInfo.phoneNumber,
         pickupAddress: userInfo.pickupAddress,
         eWasteType: userInfo.eWasteType,
+        preferredDate: userInfo.preferredDate,
+        preferredTime: userInfo.preferredTime,
         verifyCaptcha
       });
       console.log("userinfo", data);
@@ -89,7 +91,8 @@ export default function Business() {
       {userDetails.length > 0 ? (
         (() => {
           const filteredUsers = userDetails.filter(
-            (user) => user.status !== "accepted" && user.status !== "rejected"
+            // (user) => user.status !== "accepted" && user.status !== "rejected" && user.status !== "ready" && user.status !== "collected"
+            (user) => user.status === "pending"
           );
           return filteredUsers.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mt-2 pb-16">
@@ -103,10 +106,10 @@ export default function Business() {
             </div>
           );
         })()
-      ):(<div className="flex justify-center items-center">
-          <p className="text-white text-xl">Nothing to Recycle!</p>
+      ):(<div className="bg-gray-900 mt-2 p-4 rounded-lg">
+          <p className="text-sm text-gray-400">No items available for recycling!</p>
         </div>
       )}
-    </div>
+    </div>  
   ); 
 }

@@ -15,6 +15,7 @@ export default function BusinessProfile() {
   const [scannedData, setScannedData] = useState(""); // Store scanned QR data
   const [selectedHistory, setSelectedHistory] = useState(null); // Track selected recycling history for details
   const [businessProfile, setBusinessProfile] = useState([]);
+  const [recyclingHistory, setRecyclingHistory] = useState([]);
   const [userLoading, setUserLoading] = useState(true);
   const [count, setCount] = useState({
     accepted: 0,
@@ -26,6 +27,7 @@ export default function BusinessProfile() {
   useEffect(() => {
     const fetchBusinessProfile = async () => {
       try{
+        setUserLoading(true)
         const { data } = await axios.get(`http://localhost:3000/api/business-profile/${user._id}`);
         if(data.success){
           setBusinessProfile(data.recycleDetails);
@@ -48,12 +50,29 @@ export default function BusinessProfile() {
     fetchBusinessProfile();
   }, []);
 
+  useEffect(() => {
+    const fetchBusinessRecentOrders = async () => {
+      setUserLoading(true);
+      try{
+        const { data } = await axios.get(`http://localhost:3000/api/recent-order/${user._id}`);
+        if(data.success){
+          setRecyclingHistory(data.recentOrders);
+          console.log(data.recentOrders)
+        }
+      }catch(error){
+        console.log(error);
+      }finally{
+        setUserLoading(false)
+      }
+    }
+    fetchBusinessRecentOrders();
+  }, []);
   if (userLoading){
     return (
       <Loading/>
     );
   }
-  const recyclingHistory = [
+  const recyclingHistoryp = [
     {
         id: 1,
       date: "2023-10-01",
@@ -89,8 +108,18 @@ export default function BusinessProfile() {
     },
   ];
   
-  const verifyCaptcha = () => {
+  const verifyCaptcha = async () => {
     console.log(captcha)
+    try{
+      const { data } = await axios.post(`http://localhost:3000/api/collect-waste`, {captcha});
+      console.log("userinfo", data);
+      console.log(data.success);
+    }catch(error){
+      console.log(error);
+      alert("Recycle item not found or captcha failed!" || error?.response?.data?.message || error);
+    }
+    setCaptcha('');
+    setIsCaptchaOpen(false);
   }
 
   // Function to toggle modal and set selected order
@@ -163,7 +192,7 @@ const handleLogout = () => {
       {/* Stats Section */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-center">
         {[
-          { label: "Total Orders", value: businessProfile.length, color: "text-white" },
+          { label: "Total Orders", value: (businessProfile.length + recyclingHistory.length), color: "text-white" },
           { label: "Accepted Orders", value: count.accepted, color: "text-green-400" },
           { label: "Rejected Orders", value: count.rejected, color: "text-red-400" },
         ].map((stat, index) => (
@@ -176,7 +205,7 @@ const handleLogout = () => {
 
       {/* Recent Orders Table */}
       <div className="mt-5 bg-gray-800 p-6 rounded-lg shadow-md">
-        <h3 className="text-xl font-semibold text-center">Recent Orders</h3>
+        <h3 className="text-xl font-semibold text-center">Orders</h3>
         <div className="overflow-x-auto">
           <table className="w-full mt-4 text-left">
             <thead>
@@ -192,9 +221,9 @@ const handleLogout = () => {
                 <tr key={index} className="border-b border-gray-700">
                   <td className="py-2">{order.fullName}</td>
                   <td className="py-2">{order.eWasteType.join(", ")}</td>
-                  <td className={`py-2 ${order.status === "accepted" ? "text-green-400" : "text-red-400"}`}>{order.status}</td>
+                  <td className={`py-2 ${(order.status === "accepted" || order.status === "ready") ? "text-green-400" : "text-red-400"}`}>{order.status === "ready" ? "Ready for pickup" : order.status}</td>
                   <td className="py-2">
-                    {order.status === "accepted" && ( // Only show "View Details" for accepted orders
+                    {order.status === "accepted" || order.status === "ready" && ( // Only show "View Details" for accepted orders
                       <button
                         onClick={() => toggleModal(order)}
                         className="text-blue-400 hover:text-blue-500 font-semibold"
@@ -215,10 +244,10 @@ const handleLogout = () => {
         <h3 className="text-xl font-semibold text-center">Recycling History</h3>
         <div className="space-y-3 mt-4">
           {recyclingHistory.map((entry) => (
-            <div key={entry.id} className="bg-gray-700 p-4 rounded-lg">
-              <p className="text-sm text-gray-400">{entry.date}</p>
+            <div key={entry._id} className="bg-gray-700 p-4 rounded-lg">
+              <p className="text-sm text-gray-400">{entry.createdAt.split("T")[0]}</p>
               <p className="text-lg font-semibold text-white">
-                Items: {entry.items.join(", ")}
+                Items: {entry.eWasteType.join(", ")}
               </p>
               <button
                 onClick={() => toggleHistoryDetails(entry)}
@@ -249,6 +278,12 @@ const handleLogout = () => {
               <p>
                 <span className="font-semibold text-gray-400">Full Address:</span> {selectedOrder.pickupAddress}
               </p>
+              <p>
+                <span className="font-semibold text-gray-400">Preferred Date:</span> {selectedOrder.preferredDate}
+              </p>
+              <p>
+                <span className="font-semibold text-gray-400">Preferred Date:</span> {selectedOrder.preferredTime}
+              </p>
             </div>
             <div className="mt-4 text-right">
               <button
@@ -269,22 +304,22 @@ const handleLogout = () => {
             <h3 className="text-xl font-bold text-gray-200 mb-4">Recycling Details</h3>
             <div className="space-y-2 text-gray-300">
               <p>
-                <span className="font-semibold">Date:</span> {selectedHistory.date}
+                <span className="font-semibold">Date:</span> {selectedHistory.createdAt.split("T")[0]}
               </p>
               <p>
-                <span className="font-semibold">Items:</span> {selectedHistory.items.join(", ")}
+                <span className="font-semibold">Name:</span> {selectedHistory.fullName}
               </p>
               <p>
-                <span className="font-semibold">Points:</span> {selectedHistory.points}
+                <span className="font-semibold">Phone:</span> {selectedHistory.phoneNumber}
               </p>
               <p>
-                <span className="font-semibold">Location:</span> {selectedHistory.details.location}
+                <span className="font-semibold">Email:</span> {selectedHistory.userInfo.email}
               </p>
               <p>
-                <span className="font-semibold">Weight:</span> {selectedHistory.details.weight}
+                <span className="font-semibold">Items:</span> {selectedHistory.eWasteType.join(", ")}
               </p>
               <p>
-                <span className="font-semibold">Notes:</span> {selectedHistory.details.notes}
+                <span className="font-semibold">Location:</span> {selectedHistory.pickupAddress}
               </p>
             </div>
             <div className="mt-4 text-right">
