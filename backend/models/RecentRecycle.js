@@ -1,10 +1,10 @@
 import mongoose from "mongoose"
 const Schema = mongoose.Schema
 
-const recycleItemSchema = new Schema({
+const recycleRecycleSchema = new Schema({
     userID:{
         type: Schema.Types.ObjectId,
-        ref: "UserDetails",
+        ref: "User",
         required: true
     },
     businessID: {
@@ -14,7 +14,7 @@ const recycleItemSchema = new Schema({
     },
     status: {
         type: String,
-        enum: ["accepted", "rejected", "ready"]
+        default: "collected"
     },
     fullName: {
         type: String,
@@ -32,13 +32,14 @@ const recycleItemSchema = new Schema({
         type: [String],
         required: true,
     },
-    preferredDate: {
-        type: String,
-        required: true,
-    },
-    preferredTime: {
-        type: String
-    },
+    // quantity: {
+    //     type: Number,
+    //     required: true
+    // },
+    // condition: {
+    //     type: String,
+    //     required: true
+    // },
     verifyCaptcha: {
         type: String,
         required: true,
@@ -109,4 +110,4 @@ const recycleItemSchema = new Schema({
     
 })
 
-export default mongoose.model("RecycleItem", recycleItemSchema)
+export default mongoose.model("RecentRecycle", recycleRecycleSchema)
