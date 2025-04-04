@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import RecycleItem from "../models/RecycleItem.js";
 import UserDetails from "../models/UserDetails.js"
+import RecentRecycle from "../models/RecentRecycle.js";
 
 const { ObjectId } = mongoose.Types;
 
@@ -111,7 +112,7 @@ const getUserProfile = async (req, res) => {
         //     return res.status(404).json({message: "User not found!"});
         // }
 
-        const recycleDetails = await RecycleItem.aggregate([
+        let recycleDetails = await RecycleItem.aggregate([
             // {
             //     $lookup: {
             //         from: "userdetails",
@@ -233,6 +234,42 @@ const getUserProfile = async (req, res) => {
     }
 }
 
+const getUserRecycleHistory = async (req, res) => {
+    const userID = new ObjectId(req.params.userID);
+    try{
+        const recentOrders = await RecentRecycle.aggregate([
+            {
+                $match: {
+                    userID: userID,
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "userID",
+                    foreignField: "_id",
+                    as: "userInfo"
+                }
+            },
+            {
+                $unwind: "$userInfo"          
+            },
+        ]);
+        console.log(recentOrders);
+        res.status(200).json({
+            success: true,
+            recentOrders
+        });
+    }catch(error){
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch all details!",
+            error: error.message
+        })
+    }
+}
+
 // const getUserPendingItems = async (req, res) => {
 //     const userID = req.params.userID;
 
@@ -257,4 +294,4 @@ const getUserProfile = async (req, res) => {
 //     }
 // }
 
-export { RecycleWaste, getAllUsers, getUserProfile };
+export { RecycleWaste, getAllUsers, getUserProfile, getUserRecycleHistory};
