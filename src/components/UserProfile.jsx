@@ -10,21 +10,12 @@ export default function UserProfile(){
     const [showDetails, setShowDetails] = useState(null); // State to track which request's details are visible
     const navigate = useNavigate(); // Hook for navigation
     const [userProfile, setUserProfile] = useState([]);
+    const [recyclingHistory, setRecyclingHistory] = useState([]);
+    
     // const [userPendingItems, setUserPendingItems] = useState([]);
     const [userLoading, setUserLoading] = useState(true);
     const [showCaptcha, setShowCaptcha] = useState(false);
     const [captchaStates, setCaptchaStates] = useState({});
-
-    const handleShowCaptcha = (requestId) => {
-        const newCaptcha = generateCaptcha();
-        setCaptchaStates(prev => ({
-            ...prev,
-            [requestId]: {
-                show: true,
-                value: newCaptcha
-            }
-        }));
-    };
     
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -32,7 +23,7 @@ export default function UserProfile(){
             const { data } = await axios.get(`http://localhost:3000/api/user-profile/${user._id}`);
             if(data.success){
                 setUserProfile(data.recycleDetails);
-                console.log(data.recycleDetails);
+                console.log("hiiiiiiiii", data.recycleDetails);
             }
             // if(userProfile.length === 0){
             //     const { data } = await axios.get(`http://localhost:3000/api/user-profile/pending/${user._id}`);
@@ -48,8 +39,46 @@ export default function UserProfile(){
         }
         fetchUserProfile();
     }, []);
+
+    useEffect(() => {
+        const fetchUserRecentOrders = async () => {
+          setUserLoading(true);
+          try{
+            const { data } = await axios.get(`http://localhost:3000/api/user-recent-order/${user._id}`);
+            if(data.success){
+              setRecyclingHistory(data.recentOrders);
+              console.log("rd",data.recentOrders)
+            }
+          }catch(error){
+            console.log(error);
+          }finally{
+            setUserLoading(false)
+          }
+        }
+        fetchUserRecentOrders();
+    }, []);
+
     console.log(userProfile)
-    const recyclingHistory = [
+
+    // const handleShowCaptcha = (requestId) => {
+    //     setCaptchaStates(prev => ({
+    //         ...prev,
+    //         [requestId]: {
+    //             show: true
+    //         }
+    //     }));
+    // };
+    const handleShowCaptcha = (requestId) => {
+        setCaptchaStates((prev) => ({
+            ...prev,
+            [requestId]: {
+                show: !prev[requestId]?.show // Toggle visibility
+            }
+        }));
+    };
+    
+
+    const recyclingHistoryy = [
         { id: 1, date: '2023-10-01', items: ['Laptop', 'Smartphone']},
         { id: 2, date: '2023-09-25', items: ['Tablet', 'Printer']},
         { id: 3, date: '2023-09-18', items: ['Monitor', 'Keyboard']},
@@ -151,17 +180,17 @@ export default function UserProfile(){
                                 {request.status === "pending" &&(<button onClick={() => deleteRequest(request._id)} className="absolute right-4 top-7 text-gray-400 hover:text-red-400">
                                     <FaTrash className="h-5 w-5" />
                                 </button>)}
-                                <p className="text-sm text-gray-400">Request Status: <span className={`text-sm ${request.status === "accepted" ? "text-green-400" : "text-red-400"}`}>{request.status || request.status}</span></p>
+                                <p className="text-sm text-gray-400">Request Status: <span className={`text-sm ${request.status === "accepted" ? "text-green-400" : "text-red-400"}`}>{request.status === "ready" ? "ready for pickup" : request.status}</span></p>
                                 <p className="text-lg font-semibold text-white">
                                     <span className="font-semibold text-gray-300">Items: </span>{request.eWasteType.join(", ")}
                                 </p>
 
                                 {/* captcha Icon on the right side */}
-                                {request.status === "accepted" && (
+                                {/* {request.status === "accepted" && (
                                     <div className="absolute top-4 right-4">
                                         {request.verifyCaptcha ? (
                                             <div className="p-2 text-white bg-stone-900 rounded">
-                                                {request.verifyCaptcha  }
+                                                {request?.verifyCaptcha}
                                             </div>
                                         ) : (
                                             <button
@@ -170,6 +199,22 @@ export default function UserProfile(){
                                             >   
                                                 <label htmlFor="" className="text-sm sm:text-lg">View Captcha</label>
                                             </button>
+                                        )}
+                                    </div>
+                                )} */}
+                                {request.status === "accepted" || request.status === "ready" && (
+                                    <div className="absolute top-2 right-2">
+                                        <button
+                                            className="p-2 text-gray-400 hover:text-white focus:outline-none"
+                                            onClick={() => handleShowCaptcha(request._id)}
+                                        >
+                                            {captchaStates[request._id]?.show ? "Hide Captcha" : "View Captcha"}
+                                        </button>
+
+                                        {captchaStates[request._id]?.show && request.verifyCaptcha && (
+                                            <div className="p-2 text-white rounded absolute right-0 top-7">
+                                                {request.verifyCaptcha}
+                                            </div>
                                         )}
                                     </div>
                                 )}
@@ -204,9 +249,9 @@ export default function UserProfile(){
                     <h2 className="text-xl font-bold mb-4 text-gray-300">Recent Recycling History</h2>
                     <div className="space-y-3">
                     {recyclingHistory.map((entry) => (
-                        <div key={entry.id} className="bg-stone-900 p-4 rounded-lg">
-                        <p className="text-sm text-gray-400">{entry.date}</p>
-                        <p className="text-lg font-semibold text-white">{entry.items.join(', ')}</p>
+                        <div key={entry._id} className="bg-stone-900 p-4 rounded-lg">
+                        <p className="text-sm text-gray-400">{entry.createdAt.split("T")[0]}</p>
+                        <p className="text-lg font-semibold text-white">{entry.eWasteType.join(', ')}</p>
                         {/* <p className="text-sm text-green-500">+{entry.pointsEarned} points</p> */}
                         </div>
                     ))}
