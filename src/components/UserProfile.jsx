@@ -220,7 +220,7 @@ export default function UserProfile(){
                                 )}
 
                                 {/* View Details Button (only for accepted requests) */}
-                                {request.status === "accepted" && (
+                                {request.status === "ready" && (
                                     <div className="mt-2">
                                         <button
                                             className="text-blue-400 hover:text-blue-500"
@@ -232,7 +232,7 @@ export default function UserProfile(){
                                 )}
 
                                 {/* Hardcoded Details (only for accepted requests) */}
-                                {showDetails === request._id && request.status === "accepted" && (
+                                {showDetails === request._id && request.status === "ready" && (
                                     <div className="mt-2 p-2 bg-stone-800 text-gray-100 rounded-lg">
                                         <p className="text-sm"><span className="font-semibold text-gray-400">Organization Name: </span>{request.businessDetails.businessName}</p>
                                         <p className="text-sm"><span className="font-semibold text-gray-400">Name of collector: </span>{request.businessDetails.businessName}</p>
