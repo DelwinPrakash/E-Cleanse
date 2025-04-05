@@ -53,7 +53,7 @@ export default function Business() {
       const { data } = await axios.post(`http://localhost:3000/api/recycle-item`, {
         userID: userID,   //from user collection
         businessID: user._id,
-        // status,
+        status,
         fullName: userInfo.fullName,
         phoneNumber: userInfo.phoneNumber,
         pickupAddress: userInfo.pickupAddress,

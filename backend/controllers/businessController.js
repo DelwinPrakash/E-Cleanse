@@ -82,13 +82,19 @@ const updateUserStatus = async (req, res) => {      //when the business accepts 
 }
 
 const recycleItem = async (req, res) => {
-    const { userID, businessID, fullName, phoneNumber, pickupAddress, eWasteType, preferredDate, preferredTime, verifyCaptcha } = req.body;
+    const { userID, businessID, status, fullName, phoneNumber, pickupAddress, eWasteType, preferredDate, preferredTime, verifyCaptcha } = req.body;
     console.log(verifyCaptcha)
+    let userStatus = status;
+    if(userStatus === "rejected"){
+        userStatus = "rejected";
+    }else{
+        userStatus = "ready";
+    }
     try {
         const newRecycleItem = await RecycleItem.create({
             userID,
             businessID,
-            status: "ready",
+            status: userStatus,
             fullName,
             phoneNumber,
             pickupAddress,
@@ -188,7 +194,7 @@ const collectEWaste = async (req, res) => {
             verifyCaptcha: recycleItem.verifyCaptcha
         });
         
-        await UserDetails.findOneAndUpdate({ userID: recycleItem.userID }, {status: "completed"});
+        await UserDetails.findOneAndUpdate({ userID: recycleItem.userID }, {status: "collected"});
         await RecycleItem.deleteOne({ userID: recycleItem.userID });
 
         res.status(201).json({ success: true, message: "Recent recycle item created successfully", recentRecycle });

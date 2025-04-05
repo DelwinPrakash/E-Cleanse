@@ -155,7 +155,7 @@ export default function UserProfile(){
                                 {request.status === "pending" &&(<button onClick={() => deleteRequest()} className="absolute right-4 top-7 text-gray-400 hover:text-red-400">
                                     <FaTrash className="h-5 w-5" />
                                 </button>)}
-                                <p className="text-sm text-gray-400">Request Status: <span className={`text-sm ${request.status === "accepted" ? "text-green-400" : "text-red-400"}`}>{request.status === "ready" ? "ready for pickup" : request.status}</span></p>
+                                <p className="text-sm text-gray-400">Request Status: <span className={`text-sm ${request.status === "accepted" ? "text-green-400" : "text-red-400"}`}>{request.status === "ready" ? "ready for pickup" : request.status === "rejected" ? "pending" : request.status}</span></p>
                                 <p className="text-lg font-semibold text-white">
                                     <span className="font-semibold text-gray-300">Items: </span>{request.eWasteType.join(", ")}
                                 </p>
@@ -206,7 +206,7 @@ export default function UserProfile(){
                                 {request.status === "pending" &&(<button onClick={() => deleteRequest()} className="absolute right-4 top-7 text-gray-400 hover:text-red-400">
                                     <FaTrash className="h-5 w-5" />
                                 </button>)}
-                                <p className="text-sm text-gray-400">Request Status: <span className={`text-sm text-yellow-400`}>{request.status}</span></p>
+                                <p className="text-sm text-gray-400">Request Status: <span className={`text-sm text-yellow-400`}>{request.status === "rejected" ? "pending" : request.status}</span></p>
                                 <p className="text-lg font-semibold text-white">
                                     <span className="font-semibold text-gray-300">Items: </span>{request.eWasteType.join(", ")}
                                 </p>
