@@ -8,7 +8,7 @@ import handleLogin from "./backend/controllers/authController.js";
 import verifyJWT from "./backend/controllers/verifyJWT.js";
 import verifyEmail from "./backend/controllers/verifyEmail.js";
 import { collectEWaste, completeBusinessProfile, getBusinessDetails, getBusinessProfile, getRecycleHistory, recycleItem, updateUserStatus } from "./backend/controllers/businessController.js";
-import { RecycleWaste, getAllUsers, getUserProfile, getUserRecycleHistory } from "./backend/controllers/userController.js";
+import { RecycleWaste, deleteRequest, getAllUsers, getUserProfile, getUserRecycleHistory } from "./backend/controllers/userController.js";
 
 const app = express();
 
@@ -51,6 +51,8 @@ app.post("/api/collect-waste", collectEWaste);
 app.get("/api/recent-order/:userID", getRecycleHistory);
 
 app.get("/api/user-recent-order/:userID", getUserRecycleHistory);
+
+app.delete("/api/delete-request/:userID", deleteRequest);
 
 // app.get("/api/user-profile/pending/:userID", getUserPendingItems);
 

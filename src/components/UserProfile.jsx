@@ -69,6 +69,23 @@ export default function UserProfile(){
         };
     }
 
+    const deleteRequest = async () => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this item?");
+        if (!confirmDelete) {
+            console.log("Delete request cancelled");
+            return;
+        }
+        
+        try{
+            const { data } = await axios.delete(`http://localhost:3000/api/delete-request/${user._id}`);
+            if(data.success){
+                alert(data.message);
+            }
+        }catch(error){
+            console.log(error);
+        }
+    }
+
     // Toggle details visibility for a specific request
     const toggleDetails = (requestId) => {
         setShowDetails((prev) => (prev === requestId ? null : requestId)); // Toggle details visibility
@@ -135,7 +152,7 @@ export default function UserProfile(){
                         </div>}
                         {userProfile.map((request) => (
                             <div key={request._id} className="bg-stone-900 p-4 rounded-lg relative">
-                                {request.status === "pending" &&(<button onClick={() => deleteRequest(request._id)} className="absolute right-4 top-7 text-gray-400 hover:text-red-400">
+                                {request.status === "pending" &&(<button onClick={() => deleteRequest()} className="absolute right-4 top-7 text-gray-400 hover:text-red-400">
                                     <FaTrash className="h-5 w-5" />
                                 </button>)}
                                 <p className="text-sm text-gray-400">Request Status: <span className={`text-sm ${request.status === "accepted" ? "text-green-400" : "text-red-400"}`}>{request.status === "ready" ? "ready for pickup" : request.status}</span></p>
@@ -184,9 +201,9 @@ export default function UserProfile(){
                                 )}
                             </div>
                         ))}
-                        {userProfile.length === 0 ? userPending.map((request) => (
+                        {userProfile.length === 0 || userProfile.length !== 0 ? userPending.map((request) => (
                             <div key={request._id} className="bg-stone-900 p-4 rounded-lg relative">
-                                {request.status === "pending" &&(<button onClick={() => deleteRequest(request._id)} className="absolute right-4 top-7 text-gray-400 hover:text-red-400">
+                                {request.status === "pending" &&(<button onClick={() => deleteRequest()} className="absolute right-4 top-7 text-gray-400 hover:text-red-400">
                                     <FaTrash className="h-5 w-5" />
                                 </button>)}
                                 <p className="text-sm text-gray-400">Request Status: <span className={`text-sm text-yellow-400`}>{request.status}</span></p>

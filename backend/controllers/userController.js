@@ -273,6 +273,18 @@ const getUserRecycleHistory = async (req, res) => {
     }
 }
 
+const deleteRequest = async (req, res) => {
+    const userID = req.params.userID;
+    
+    const users = await UserDetails.find({ userID, status: "pending" });
+    if(!users || users.length === 0){
+        return res.status(404).json({message: "No pending items found!"});
+    }
+
+    await UserDetails.deleteOne({ userID, status: "pending" });
+    res.status(200).json({message: "Pending items deleted successfully!"});   
+}
+
 // const getUserPendingItems = async (req, res) => {
 //     const userID = req.params.userID;
 
@@ -297,4 +309,4 @@ const getUserRecycleHistory = async (req, res) => {
 //     }
 // }
 
-export { RecycleWaste, getAllUsers, getUserProfile, getUserRecycleHistory};
+export { RecycleWaste, getAllUsers, getUserProfile, getUserRecycleHistory, deleteRequest};
