@@ -12,7 +12,6 @@ export default function BusinessProfile() {
   const [isModalOpen, setIsModalOpen] = useState(false); // Track modal visibility
   const [selectedOrder, setSelectedOrder] = useState(null); // Track selected order for personal details
   const [IsCaptchaOpen, setIsCaptchaOpen] = useState(false); // Track QR Scanner modal visibility
-  const [scannedData, setScannedData] = useState(""); // Store scanned QR data
   const [selectedHistory, setSelectedHistory] = useState(null); // Track selected recycling history for details
   const [businessProfile, setBusinessProfile] = useState([]);
   const [recyclingHistory, setRecyclingHistory] = useState([]);
@@ -72,48 +71,11 @@ export default function BusinessProfile() {
       <Loading/>
     );
   }
-  const recyclingHistoryp = [
-    {
-        id: 1,
-      date: "2023-10-01",
-      items: ["Laptop", "Smartphone"],
-      points: 200,
-      details: {
-          location: "Recycling Center A",
-        weight: "5.2 kg",
-        notes: "Devices were in good condition.",
-      },
-    },
-    {
-        id: 2,
-      date: "2023-09-25",
-      items: ["Tablet", "Printer"],
-      points: 150,
-      details: {
-        location: "Recycling Center B",
-        weight: "3.8 kg",
-        notes: "Printer had minor damage.",
-    },
-    },
-    {
-      id: 3,
-      date: "2023-09-18",
-      items: ["Monitor", "Keyboard"],
-      points: 100,
-      details: {
-        location: "Recycling Center C",
-        weight: "7.1 kg",
-        notes: "Monitor screen was cracked.",
-      },
-    },
-  ];
   
   const verifyCaptcha = async () => {
     console.log(captcha)
     try{
       const { data } = await axios.post(`http://localhost:3000/api/collect-waste`, {captcha});
-      console.log("userinfo", data);
-      console.log(data.success);
     }catch(error){
       console.log(error);
       alert("Recycle item not found or captcha failed!" || error?.response?.data?.message || error);
@@ -132,8 +94,6 @@ export default function BusinessProfile() {
   const toggleHistoryDetails = (history) => {
     setSelectedHistory(history);
   };
-
-
   
   // Function to handle QR scanner errors
   const handleError = (err) => {

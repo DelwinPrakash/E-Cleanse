@@ -12,9 +12,7 @@ export default function UserProfile(){
     const [userProfile, setUserProfile] = useState([]);
     const [userPending, setUserPending] = useState([]);
     const [recyclingHistory, setRecyclingHistory] = useState([]);
-    
     const [userLoading, setUserLoading] = useState(true);
-    const [showCaptcha, setShowCaptcha] = useState(false);
     const [captchaStates, setCaptchaStates] = useState({});
     
     useEffect(() => {
@@ -24,14 +22,7 @@ export default function UserProfile(){
             if(data.success){
                 setUserProfile(data.recycleDetails);
                 setUserPending(data.pendingItems);
-                // console.log("hiiiiiiiii", data.recycleDetails);
             }
-            // if(userProfile.length === 0){
-            //     const { data } = await axios.get(`http://localhost:3000/api/user-profile/pending/${user._id}`);
-            //     if(data.success){
-            //         setUserPendingItems(data.pendingItems);
-            //     }
-            // }
           }catch(error){
             console.log(error);
           }finally{
@@ -48,7 +39,6 @@ export default function UserProfile(){
             const { data } = await axios.get(`http://localhost:3000/api/user-recent-order/${user._id}`);
             if(data.success){
               setRecyclingHistory(data.recentOrders);
-              console.log("rd",data.recentOrders)
             }
           }catch(error){
             console.log(error);
@@ -59,16 +49,6 @@ export default function UserProfile(){
         fetchUserRecentOrders();
     }, []);
 
-    console.log(userProfile)
-
-    // const handleShowCaptcha = (requestId) => {
-    //     setCaptchaStates(prev => ({
-    //         ...prev,
-    //         [requestId]: {
-    //             show: true
-    //         }
-    //     }));
-    // };
     const handleShowCaptcha = (requestId) => {
         setCaptchaStates((prev) => ({
             ...prev,
@@ -78,28 +58,6 @@ export default function UserProfile(){
         }));
     };
     
-
-    // const recyclingHistoryy = [
-    //     { id: 1, date: '2023-10-01', items: ['Laptop', 'Smartphone']},
-    //     { id: 2, date: '2023-09-25', items: ['Tablet', 'Printer']},
-    //     { id: 3, date: '2023-09-18', items: ['Monitor', 'Keyboard']},
-    // ];
-
-    // const pendingRequests = [
-    //     {
-    //       id: 1,
-    //       items: ["Wires", "Batteries"],
-    //       status: "Pending",
-    //       qrData: "PendingRequest1", // Unique QR data for each request
-    //     },
-    //     {
-    //       id: 2,
-    //       items: ["Old Phone"],
-    //       status: "Accepted",
-    //       qrData: "AcceptedRequest2", // Unique QR data for each request
-    //     },
-    // ];
-
     let userDetails = {};
     if(user){
         userDetails = {
@@ -110,14 +68,13 @@ export default function UserProfile(){
             pendingRequest: (userProfile.length + userPending.length) || 0,
         };
     }
-    
-
 
     // Toggle details visibility for a specific request
     const toggleDetails = (requestId) => {
         setShowDetails((prev) => (prev === requestId ? null : requestId)); // Toggle details visibility
     };
 
+    console.log(userProfile, userPending);
     return (
         <div className="h-full">
             <div className="max-w-4xl mx-auto shadow-lg rounded-lg overflow-hidden">
@@ -173,7 +130,7 @@ export default function UserProfile(){
                 <div className="mt-3">
                     <h2 className="text-xl font-bold mb-4 text-gray-300">Pending Requests</h2>
                     <div className="space-y-3">
-                        {(userProfile.length === 0) && <div className="bg-stone-900 p-4 rounded-lg">
+                        {(userProfile.length === 0 && userPending.length === 0) && <div className="bg-stone-900 p-4 rounded-lg">
                             <p className="text-sm text-gray-400">No pending request!</p>
                         </div>}
                         {userProfile.map((request) => (
@@ -187,22 +144,6 @@ export default function UserProfile(){
                                 </p>
 
                                 {/* captcha Icon on the right side */}
-                                {/* {request.status === "accepted" && (
-                                    <div className="absolute top-4 right-4">
-                                        {request.verifyCaptcha ? (
-                                            <div className="p-2 text-white bg-stone-900 rounded">
-                                                {request?.verifyCaptcha}
-                                            </div>
-                                        ) : (
-                                            <button
-                                                className="p-2  text-gray-400 hover:text-white focus:outline-none"
-                                                onClick={() => handleShowCaptcha(request._id)}
-                                            >   
-                                                <label htmlFor="" className="text-sm sm:text-lg">View Captcha</label>
-                                            </button>
-                                        )}
-                                    </div>
-                                )} */}
                                 {request.status === "accepted" || request.status === "ready" && (
                                     <div className="absolute top-2 right-2">
                                         <button
@@ -243,7 +184,7 @@ export default function UserProfile(){
                                 )}
                             </div>
                         ))}
-                        {userProfile.length !== 0 ? userPending.map((request) => (
+                        {userProfile.length === 0 ? userPending.map((request) => (
                             <div key={request._id} className="bg-stone-900 p-4 rounded-lg relative">
                                 {request.status === "pending" &&(<button onClick={() => deleteRequest(request._id)} className="absolute right-4 top-7 text-gray-400 hover:text-red-400">
                                     <FaTrash className="h-5 w-5" />
@@ -303,7 +244,6 @@ export default function UserProfile(){
                         <div key={entry._id} className="bg-stone-900 p-4 rounded-lg">
                         <p className="text-sm text-gray-400">{entry.createdAt.split("T")[0]}</p>
                         <p className="text-lg font-semibold text-white">{entry.eWasteType.join(', ')}</p>
-                        {/* <p className="text-sm text-green-500">+{entry.pointsEarned} points</p> */}
                         </div>
                     ))}
                     </div>

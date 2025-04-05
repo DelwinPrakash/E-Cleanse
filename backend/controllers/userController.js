@@ -211,14 +211,14 @@ const getUserProfile = async (req, res) => {
             // }
         ]);
         
-        if(recycleDetails.length === 0){
-            try{
-                recycleDetails = await UserDetails.find({ userID: req.params.userID , status: "pending" });
-            }catch(error){
-                console.log(error);
-                return res.status(404).json({message: "No pending items found!"});
-            }
-        }
+        // if(recycleDetails.length === 0){
+        //     try{
+        //         recycleDetails = await UserDetails.find({ userID: req.params.userID , status: "pending" });
+        //     }catch(error){
+        //         console.log(error);
+        //         return res.status(404).json({message: "No pending items found!"});
+        //     }
+        // }
         
         const pendingItems = await UserDetails.find({ userID: req.params.userID , status: "pending" });
         

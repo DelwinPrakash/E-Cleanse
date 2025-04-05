@@ -22,28 +22,33 @@ export default function App() {
             <Nav />
             <AuthProvider>
                 <Routes>
-                    {/* <Route path="/" element={<Home />} /> */}
-                    <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-                    <Route path="/signup" element={<SignUp />} />
-                    {/* <Route path="/signup/business" element={<SignUp />} /> */}
                     <Route path="/login" element={<SignIn />} />
-                    {/* <Route path="/user" element={<User />} /> */}
+                    <Route path="/signup" element={<SignUp />} />
+                    
                     <Route path="/register-waste" element={<WasteRegistration />} />
                     <Route path="/register-waste/qrcode" element={<Verification />} />
+                    <Route path="/verify-email" element={<VerifyEmail/>} />
+                    <Route path="/complete-business-profile" element={<BusinessProfileCompletion/>} />
+                    <Route path="/check-email" element={<CheckEmail/>} />
+                    
+                    
+                    <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+                    <Route path="/ai" element={<ProtectedRoute><AI /></ProtectedRoute>} />
+                    <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                    
+                    <Route path="/*" element={<NotFound />} />
+                    
+                    {/* <Route path="/" element={<Home />} /> */}
+                    {/* <Route path="/signup/business" element={<SignUp />} /> */}
+                    {/* <Route path="/user" element={<User />} /> */}
                     {/* <Route path="/business" element={<Business />} /> */}
                     {/* <Route path="/ai" element={<AI />} /> */}
-                    <Route path="/ai" element={<ProtectedRoute><AI /></ProtectedRoute>} />
                     {/* <Route path="/profile" element={<Profile />} /> */}
                     {/* <Route path="/profile/" element={<Profile />} /> */}
                     {/* <Route path="/business-profile" element={<BusinessProfile />} /> */}
-                    <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                     {/* <Route path="/profile" element={<Profile />} /> */}
-                    <Route path="/verify-email" element={<VerifyEmail/>} />
                     {/* <Route path="/verify-business-email" element={<VerifyBusinessEmail/>} /> */}
                     {/* <Route path="/complete-business-profile" element={<ProtectedRoute><BusinessProfileCompletion/></ProtectedRoute>} /> */}
-                    <Route path="/complete-business-profile" element={<BusinessProfileCompletion/>} />
-                    <Route path="/check-email" element={<CheckEmail/>} />
-                    <Route path="/*" element={<NotFound />} />
                 </Routes>
             </AuthProvider>
         </div>

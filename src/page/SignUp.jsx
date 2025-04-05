@@ -1,11 +1,9 @@
 import {React, useState} from "react";
 import UserSignUp from "../components/UserSignUp";
 import BusinessSignUp from "../components/BusinessSignUp";
-import { useNavigate } from "react-router-dom";
 export default function SignIn(){
     const [isUser, setIsUser] = useState(true);
     
-    const navigate = useNavigate();
 	return (
         <div className="w-full p-2 pb-16 sm:p-2 h-screen bg-zinc-950 overflow-y-scroll z-20">
             <div className="flex flex-col items-center h-full">

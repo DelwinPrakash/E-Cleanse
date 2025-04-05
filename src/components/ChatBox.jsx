@@ -51,7 +51,7 @@ export default function ChatBox(){
 
         INSTRUCTIONS:
         1. Respond ONLY to questions about:
-        - Proper disposal/recycling of electronics/batteries/appliances
+        - Proper disposal/recycling of electronics/batteries/appliances/any e-waste related items
         - Local e-waste collection centers/policies
         - Reducing e-waste through repairs/reuse
         - Environmental impact of improper disposal

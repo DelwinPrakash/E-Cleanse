@@ -17,7 +17,6 @@ export default function Auth(){
     
     const handleChange = (event) => {
         const { name, value } = event.target;
-        console.log(name, value);
         setUserDetails({
             ...userDetails,
             [name]: value

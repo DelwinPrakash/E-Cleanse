@@ -9,8 +9,6 @@ export function AuthProvider({children}){
     const [businessDetail, setBusinessDetail] = useState(null);
     const [loading, setLoading] = useState(true);
     const [businessLoading, setBusinessLoading] = useState(true);
-    // const [userDetails, setUserDetails] = useState(null);
-    // const [userLoading, setUserLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -30,7 +28,6 @@ export function AuthProvider({children}){
                 localStorage.removeItem("authToken");
                 setUser(null);
                 setBusinessDetail(null)
-                // setUserDetails(null)
             }).finally(() => {
                 setLoading(false);
             })
@@ -49,7 +46,6 @@ export function AuthProvider({children}){
                     setUser(data.user);
                     if(data.user.role === "business"){
                         await fetchBusinessDetails(data.user._id);
-                        // await fetchAllUsers();
                     }
                     alert("login success!");
                     if(data.redirectTo == "/complete-business-profile"){
@@ -71,16 +67,11 @@ export function AuthProvider({children}){
             try{
                 const { data, status } = await axios.post("http://localhost:3000/api/signup", signUpDetails);
                 if(status === 201){
-                    // localStorage.setItem("authToken", data.token);
-                    // setUser(data.user);
                     alert("Registration success!, check your email");
                     navigate("/check-email");
                 }
             }catch(error){
                 console.log("Registration failed!", error);
-                // if(error.response.status === 409){
-                //     alert(error.response.data.message)
-                // } 
                 throw new Error(error.response?.data?.message || "Registration failed. Please try again.");
             }
         }
@@ -90,7 +81,6 @@ export function AuthProvider({children}){
         localStorage.removeItem("authToken");
         setUser(null);
         setBusinessDetail(null);
-        // setUserDetails(null);
         alert("Logged out successfully!");
         navigate("/login");
     }

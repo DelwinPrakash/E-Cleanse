@@ -80,14 +80,7 @@ export default function Business() {
       <h1 className="text-3xl font-bold text-white p-4 bg-gray-700 shadow-md rounded-lg mt-0 sm:text-xl pl-2">
         Business Dashboard
       </h1>
-      {/* {userDetails.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mt-2 pb-16">
-          {userDetails
-            .filter((user) => user.status !== "accepted" && user.status !== "rejected") // Filter out accepted and rejected
-            .map((user) => (
-              <Card key={user._id} user={user} handleOrderStatus={handleOrderStatus} />
-          ))}
-        </div> */}
+      
       {userDetails.length > 0 ? (
         (() => {
           const filteredUsers = userDetails.filter(

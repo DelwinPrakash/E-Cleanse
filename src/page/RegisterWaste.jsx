@@ -351,7 +351,7 @@ function RegisterWaste() {
           </div>
 
           {/* Optional Details */}
-          <div>
+          {/* <div>
             <label className="block text-white mb-2" htmlFor="photos">Photos of E-Waste</label>
             <input
               type="file"
@@ -360,7 +360,7 @@ function RegisterWaste() {
               onChange={handleChange}
               className="w-full px-4 py-2 text-sm bg-gray-800 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white"
             />
-          </div>
+          </div> */}
 
           <div>
             <label className="block text-white mb-2" htmlFor="alternateContactNumber">Alternate Contact Number</label>
