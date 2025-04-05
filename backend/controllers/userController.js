@@ -221,7 +221,7 @@ const getUserProfile = async (req, res) => {
         // }
         
         const pendingItems = await UserDetails.find({ userID: req.params.userID , status: "pending" });
-        
+        console.log(pendingItems);
         res.status(200).json({
             success: true,
             recycleDetails,

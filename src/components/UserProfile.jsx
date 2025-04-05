@@ -201,7 +201,7 @@ export default function UserProfile(){
                                 )}
                             </div>
                         ))}
-                        {userProfile.length === 0 || userProfile.length !== 0 ? userPending.map((request) => (
+                        {userProfile.length === 0 || userPending.length !== 0 ? userPending.map((request) => (
                             <div key={request._id} className="bg-stone-900 p-4 rounded-lg relative">
                                 {request.status === "pending" &&(<button onClick={() => deleteRequest()} className="absolute right-4 top-7 text-gray-400 hover:text-red-400">
                                     <FaTrash className="h-5 w-5" />
